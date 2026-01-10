@@ -4,14 +4,19 @@ import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppNavigator from './src/navigation/AppNavigator';
+import { Platform, UIManager } from 'react-native';
+
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const App = () => {
   return (
     <SafeAreaProvider>
-      {/* StatusBar disesuaikan dengan tema Dark Mode kamu */}
+    
       <StatusBar 
         barStyle="light-content" 
-        backgroundColor="#1A1A1F" // Sesuai --bg-primary
+        backgroundColor="#1A1A1F" 
       />
       
       <NavigationContainer>

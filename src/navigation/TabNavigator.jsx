@@ -1,55 +1,151 @@
 import React from 'react';
+import { View, Text, Platform, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Platform } from 'react-native';
-// Pastikan menggunakan import ini untuk Expo
-import Ionicons from '@expo/vector-icons/Ionicons'; 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Animatable from 'react-native-animatable'; 
+import Ionicons from '@expo/vector-icons/Ionicons';
 
-import HomeScreen from '../screens/HomeScreen';
+import HomeScreen from '../screens/Home/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import BookmarkScreen from '../screens/BookmarkScreen';
 import HistoryScreen from '../screens/HistoryScreen';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 
+const TabButton = ({ focused, color, iconName, label }) => {
+  const activeTextColor = '#FFFFFF'; 
+
+  return (
+    <View style={styles.buttonContainer}>
+      {/* Glow Effect di belakang icon yang aktif */}
+      {focused && (
+        <Animatable.View 
+          animation="zoomIn"
+          duration={300}
+          style={styles.activeIndicator}
+        />
+      )}
+
+      <Animatable.View
+        duration={400}
+        transition={["translateY", "scale"]} 
+        style={{
+          transform: [
+            { translateY: focused ? -4 : 0 },
+            { scale: focused ? 1.1 : 1 }
+          ],
+          alignItems: 'center'
+        }}
+      >
+        <Ionicons 
+          name={iconName} 
+          size={24} 
+          color={focused ? '#EF4444' : '#71717A'} 
+        />
+        
+        <View style={{ height: 16, marginTop: 2 }}>
+          {focused && (
+            <Animatable.View
+              animation="fadeInUp" 
+              duration={400}
+              useNativeDriver
+            >
+              <Text style={[styles.label, { color: activeTextColor }]}>
+                {label}
+              </Text>
+            </Animatable.View>
+          )}
+        </View>
+      </Animatable.View>
+    </View>
+  );
+};
+
 export default function TabNavigator() {
   const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#EF4444', // --color-primary
-        tabBarInactiveTintColor: '#71717A', // --text-muted
+        tabBarActiveTintColor: '#EF4444',
+        tabBarInactiveTintColor: '#71717A',
+        tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#121215', // --bg-secondary
-          borderTopColor: '#2C2C34', // --border-soft
-          height: Platform.OS === 'android' ? 70 : 90,
-          paddingBottom: 12,
+          backgroundColor: '#121215', // Warna gelap pekat yang mewah
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          // Tinggi dinamis: 65 (base) + insets.bottom (jarak aman navigasi HP)
+          height: 65 + insets.bottom, 
+          paddingBottom: insets.bottom, 
           paddingTop: 10,
+          borderTopWidth: 1,
+          borderTopColor: '#27272A', // Garis atas sangat tipis
+          elevation: 0,
         },
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          // Sesuaikan nama icon dengan library Ionicons
-          if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Explore') {
-            iconName = focused ? 'compass' : 'compass-outline';
-          } else if (route.name === 'Bookmark') {
-            iconName = focused ? 'bookmark' : 'bookmark-outline';
-          } else if (route.name === 'History') {
-            iconName = focused ? 'time' : 'time-outline';
-          }
-
-          // Render komponen Icon
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}
+      }}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Explore" component={ExploreScreen} />
-      <Tab.Screen name="Bookmark" component={BookmarkScreen} />
-      <Tab.Screen name="History" component={HistoryScreen} />
+      <Tab.Screen 
+        name="Home" 
+        component={HomeScreen} 
+        options={{
+          tabBarIcon: ({ focused, color }) => (
+            <TabButton focused={focused} color={color} iconName={focused ? "home" : "home-outline"} label="Home" />
+          )
+        }} 
+      />
+      <Tab.Screen 
+        name="Explore" 
+        component={ExploreScreen} 
+        options={{
+          tabBarIcon: ({ focused, color }) => (
+            <TabButton focused={focused} color={color} iconName={focused ? "compass" : "compass-outline"} label="Explore" />
+          )
+        }} 
+      />
+      <Tab.Screen 
+        name="Bookmark" 
+        component={BookmarkScreen} 
+        options={{
+          tabBarIcon: ({ focused, color }) => (
+            <TabButton focused={focused} color={color} iconName={focused ? "bookmark" : "bookmark-outline"} label="Library" />
+          )
+        }} 
+      />
+      <Tab.Screen 
+        name="History" 
+        component={HistoryScreen} 
+        options={{
+          tabBarIcon: ({ focused, color }) => (
+            <TabButton focused={focused} color={color} iconName={focused ? "time" : "time-outline"} label="History" />
+          )
+        }} 
+      />
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 65,
+    marginTop: 5,
+  },
+  label: {
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  activeIndicator: {
+    position: 'absolute',
+    top: -8,
+    width: 45,
+    height: 45,
+    borderRadius: 22.5,
+    backgroundColor: 'rgba(239, 68, 68, 0.08)',
+  }
+});

@@ -6,9 +6,15 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#EF4444",
-          light: "#F87171",
-          dark: "#B91C1C",
+          100: "#FEE2E2",
+          200: "#FCA5A5",
+          300: "#F87171",
+          400: "#EF4444",
+          500: "#DC2626",
+          600: "#B91C1C",
+          700: "#991B1B",
+          800: "#7F1D1D",
+          900: "#611A1A",
         },
         zinc: {
           bg: "#1A1A1F",

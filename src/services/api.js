@@ -21,8 +21,8 @@ export const apiService = {
 
     getDetail: (manhwaId) => fetchData(`/v1/manga/detail/${manhwaId}`),
 
-    getChapterList: (manhwaId, page = 1) =>
-        fetchData(`/v1/chapter/${manhwaId}/list?page=${page}&page_size=24&sort_by=chapter_number&sort_order=desc`),
+    getChapterList: (manhwaId, page = 1, order = 'desc', search = '') =>
+        fetchData(`/v1/chapter/${manhwaId}/list?page=${page}&page_size=20&sort_by=chapter_number&sort_order=${order}${search ? `&search=${search}` : ''}`),
 
     getChapterDetail: (chapterId) => fetchData(`/v1/chapter/detail/${chapterId}`),
 
