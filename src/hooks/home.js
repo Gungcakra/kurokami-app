@@ -11,8 +11,8 @@ export const useManhwa = () => {
         try {
             const result = await apiService.getNewUpdate();
             if (result && result.data) {
-                
-                setNewUpdates(result.data); 
+
+                setNewUpdates(result.data);
             }
         } catch (err) {
             setError('Gagal mengambil data terbaru');
@@ -38,7 +38,7 @@ export const useGenres = () => {
             const result = await apiService.getGenres();
             if (result && result.data) {
                 setGenres(result.data);
-            }   
+            }
         } catch (err) {
             setError('Gagal mengambil data genre');
         } finally {
@@ -50,4 +50,121 @@ export const useGenres = () => {
         fetchGenres();
     }, []);
     return { genres, loading, error, getGenres: fetchGenres };
+};
+
+export const useRecommendations = () => {
+    const [recommendations, setRecommendations] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const fetchRecommendations = async () => {
+        setLoading(true);
+        try {
+            const result = await apiService.getRecommend();
+            if (result && result.data) {
+                setRecommendations(result.data);
+            }
+        } catch (err) {
+            setError('Gagal mengambil data rekomendasi');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchRecommendations();
+    }, []);
+    return { recommendations, loading, error, getRecommendations: fetchRecommendations };
+}
+
+export const usePopularManhwa = () => {
+    const [popularManhwa, setPopularManhwa] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const fetchPopularManhwa = async () => {
+        setLoading(true);
+        try {
+            const result = await apiService.getTopManga();
+            if (result && result.data) {
+                setPopularManhwa(result.data);
+            }
+        } catch (err) {
+            setError('Gagal mengambil data manhwa populer');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchPopularManhwa();
+    }, []);
+    return { popularManhwa, loading, error, getPopularManhwa: fetchPopularManhwa };
+}
+
+export const useSearchManhwa = () => {
+    const [searchResults, setSearchResults] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [error, setError] = useState(null);
+    const [keyword, setKeyword] = useState('');
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+
+    const searchManhwa = async (searchKeyword, pageNumber = 1, isNextPage = false) => {
+        if (!searchKeyword) {
+            setSearchResults([]);
+            return;
+        }
+
+        if (isNextPage) setLoadingMore(true);
+        else setLoading(true);
+
+        try {
+            const result = await apiService.searchManga(searchKeyword, pageNumber);
+            const newData = result?.data || [];
+            
+            if (isNextPage) {
+                setSearchResults(prev => [...prev, ...newData]);
+            } else {
+                setSearchResults(newData);
+            }
+
+            // Cek apakah masih ada halaman selanjutnya
+            setHasMore(newData.length > 0); 
+            setPage(pageNumber);
+        } catch (err) {
+            setError('Gagal mencari manhwa');
+        } finally {
+            setLoading(false);
+            setLoadingMore(false);
+        }
+    };
+
+    // Debounce Logic: Menunggu user berhenti mengetik selama 500ms
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (keyword) {
+                searchManhwa(keyword, 1, false);
+            } else {
+                setSearchResults([]);
+            }
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [keyword]);
+
+    const loadMore = () => {
+        if (!loading && !loadingMore && hasMore) {
+            searchManhwa(keyword, page + 1, true);
+        }
+    };
+
+    return { 
+        searchResults, 
+        loading, 
+        loadingMore, 
+        error, 
+        keyword, 
+        setKeyword, 
+        loadMore 
+    };
 };

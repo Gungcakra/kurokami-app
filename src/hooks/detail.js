@@ -39,9 +39,7 @@ export const useChapterList = (manhwaId) => {
         setLoading(true);
         try {
             const result = await apiService.getChapterList(manhwaId, page, order, search);
-            // Anggap API mengembalikan meta.total_page atau hitung manual
             setChapters(result?.data || []);
-            // Simulasi total page jika API tidak memberikan (misal total 100 chapter / 20 per page)
             setTotalPage(result?.meta?.total_page || 5);
         } catch (err) {
             console.error(err);

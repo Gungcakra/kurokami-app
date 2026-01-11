@@ -4,6 +4,7 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import DetailScreen from '../screens/Detail/DetailScreen';
 import ChapterScreen from '../screens/Chapter/ChapterScreen';
 import TabNavigator from './TabNavigator';
+import SearchScreen from '../screens/Home/SearchScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +46,15 @@ export default function AppNavigator() {
         options={{
           animation: 'simple_push', 
           orientation: 'portrait',
+        }}
+      />
+
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          animation: 'slide_from_bottom',
+          gestureEnabled: true,
         }}
       />
     </Stack.Navigator>

@@ -19,7 +19,7 @@ export const DetailSection = ({ item, insets, navigation }) => {
 
         {/* TOP BAR ACTIONS */}
         <View style={{ marginTop: insets.top + 10 }} className="absolute top-0 left-0 right-0 px-6 flex-row justify-between">
-          <TouchableOpacity onPress={() => navigation.navigate('Home')} className="bg-black/40 p-3 rounded-full border border-white/10">
+          <TouchableOpacity onPress={() => navigation.navigate('Main')} className="bg-black/40 p-3 rounded-full border border-white/10">
             <Ionicons name="chevron-back" size={24} color="white" />
           </TouchableOpacity>
           <View className="flex-row gap-3">
@@ -42,8 +42,8 @@ export const DetailSection = ({ item, insets, navigation }) => {
           
           <View className="flex-row mt-6 gap-6 bg-zinc-soft/50 p-4 rounded-3xl border border-zinc-border/50">
             <View className="items-center">
-              <Text className="text-red-500 font-black text-lg">{item?.user_rate}</Text>
-              <Text className="text-zinc-muted text-[10px] uppercase font-bold tracking-widest">Rating</Text>
+              <Text className="text-yellow-500 font-black text-lg"> {item?.user_rate}</Text>
+              <Text className="text-zinc-muted text-center text-[10px] uppercase font-bold tracking-widest">Rating</Text>
             </View>
             <View className="w-[1px] h-6 bg-zinc-border self-center" />
             <View className="items-center">
@@ -62,7 +62,7 @@ export const DetailSection = ({ item, insets, navigation }) => {
         <View className="flex-row flex-wrap justify-center mb-8">
           {item?.taxonomy?.Genre?.map((genre) => (
             <View key={genre.taxonomy_id} className="bg-red-500/10 px-4 py-1.5 rounded-xl m-1 border border-red-500/20">
-              <Text className="text-red-500 text-[11px] font-bold uppercase">{genre.name}</Text>
+              <Text className="text-white text-[11px] font-bold uppercase">{genre.name}</Text>
             </View>
           ))}
         </View>

@@ -3,6 +3,9 @@ import { View, Text, FlatList, ScrollView, Platform } from 'react-native';
 import { useManhwa } from '../../hooks/home';
 import GenreSection from './GenreSection';
 import NewUpdateSection from './NewUpdateSection';
+import HeaderSection from './HeaderSection';
+import RecommendationSection from './RecommendationSection';
+import PopularSection from './PopularSection';
 const HomeScreen = ({ navigation }) => {
 
   return (
@@ -17,9 +20,14 @@ const HomeScreen = ({ navigation }) => {
         }}
       >
 
-        <View className="py-6 mt-8">
-          <Text className="text-zinc-text text-2xl font-bold">Halo, <Text className="text-primary">Membaca Apa Hari Ini?</Text></Text>
-        </View>
+        {/* Header */}
+        <HeaderSection navigation={navigation} />
+
+        {/* Popular Section */}
+        <PopularSection navigation={navigation} />
+
+        {/* Recommendation Section */}
+        <RecommendationSection navigation={navigation} />
 
         {/* New Updates Section */}
         <NewUpdateSection navigation={navigation} />

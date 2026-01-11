@@ -26,7 +26,7 @@ export const apiService = {
 
     getChapterDetail: (chapterId) => fetchData(`/v1/chapter/detail/${chapterId}`),
 
-    searchManga: (keyword) => fetchData(`/v1/manga/list?page=1&page_size=15&q=${keyword}`),
+    searchManga: (keyword, page = 1, pageSize = 15) => fetchData(`/v1/manga/list?page=${page}&page_size=${pageSize}&q=${keyword}`),
 
     getGenres: () => fetchData('/v1/genre/list'),
 };
