@@ -15,11 +15,6 @@ export default function DetailScreen({ navigation, route }) {
   const { manhwaDetail, loading } = useManhwaDetail(id);
   const chapterData = useChapterList(id);
 
-  if (loading) return (
-    <View className="flex-1 bg-zinc-bg justify-center items-center">
-      <View className="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
-    </View>
-  );
 
   return (
     <View className="flex-1 bg-zinc-bg">
@@ -49,6 +44,7 @@ export default function DetailScreen({ navigation, route }) {
             <Ionicons name="bookmark-outline" size={24} color="#EF4444" />
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => navigation.navigate('Read', { chapterId: manhwaDetail.latest_chapter_id })}
             activeOpacity={0.9}
             className="bg-red-600 flex-1 h-14 rounded-2xl flex-row justify-center items-center shadow-lg shadow-red-600/40"
           >

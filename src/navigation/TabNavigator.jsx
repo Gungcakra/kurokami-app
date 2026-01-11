@@ -9,6 +9,7 @@ import HomeScreen from '../screens/Home/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import BookmarkScreen from '../screens/BookmarkScreen';
 import HistoryScreen from '../screens/HistoryScreen';
+import InfoScreen from '../screens/Info/InfoScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -123,7 +124,18 @@ export default function TabNavigator() {
           )
         }} 
       />
+
+      <Tab.Screen 
+        name="Information" 
+        component={InfoScreen} 
+        options={{
+          tabBarIcon: ({ focused, color }) => (
+            <TabButton focused={focused} color={color} iconName={focused ? "information-circle" : "information-circle-outline"} label="Information" />
+          )
+        }} 
+      />
     </Tab.Navigator>
+    
   );
 }
 

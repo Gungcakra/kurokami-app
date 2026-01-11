@@ -8,8 +8,8 @@ const NewUpdateSection = ({ navigation }) => {
     return (
         <View className="mt-8">
             <View className="flex-row justify-between items-end mb-4">
-                <Text className="text-zinc-text text-2xl font-bold"> <Ionicons name="refresh" size={20} color="#EF4444" /> Update Terbaru</Text>
-                {/* <Text className="text-primary text-lg font-semibold">Lihat Semua</Text> */}
+                <Text className="text-zinc-text text-2xl font-bold">  Update Terbaru</Text>
+                <Text className="text-primary-400 text-lg font-semibold">Semua</Text>
             </View>
 
             {error ? (

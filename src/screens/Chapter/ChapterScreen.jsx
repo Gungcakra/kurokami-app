@@ -82,9 +82,7 @@ export default function ReadScreen({ navigation, route }) {
                         </TouchableOpacity>
 
                         <View className="flex-1 justify-center items-center mx-4">
-                            {/* Text Induk sebagai container agar teks bisa wrap (turun ke bawah) secara alami */}
                             <Text className="text-center">
-                                {/* Bagian yang bisa diklik (Hanya Judul) */}
                                 <Text
                                     onPress={() => navigation.navigate('Detail', { id: chapterDetail?.manga_id })}
                                     className="text-white font-black text-lg"
@@ -100,10 +98,6 @@ export default function ReadScreen({ navigation, route }) {
                                 </Text>
                             </Text>
                         </View>
-
-                        <TouchableOpacity className="bg-zinc-soft p-2 rounded-full">
-                            <Ionicons name="settings-outline" size={22} color="white" />
-                        </TouchableOpacity>
                     </View>
                 </Animatable.View>
             )}
@@ -125,8 +119,8 @@ export default function ReadScreen({ navigation, route }) {
                     </TouchableOpacity>
 
                     <View className="items-center">
-                        <Text className="text-zinc-muted text-[9px] font-black uppercase tracking-tighter">Manhwa HD Reader</Text>
                         <Text className="text-white font-bold text-sm">Chapter {chapterDetail?.chapter_number}</Text>
+                        <Text className="text-zinc-muted text-xs font-black uppercase tracking-tighter">Ketuk untuk tampil/sembunyikan menu</Text>
                     </View>
 
                     <TouchableOpacity
