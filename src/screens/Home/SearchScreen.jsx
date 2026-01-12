@@ -1,8 +1,9 @@
-import { View, Text, TextInput, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, FlatList, ActivityIndicator, BackHandler } from 'react-native';
 import { useSearchManhwa } from '../../hooks/home';
 import ManhwaCardSkeleton from '../../components/ManhwaCardSkeleton';
 import ManhwaCard from '../../components/ManhwaCard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useEffect } from 'react';
 
 const SearchScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets();
@@ -24,6 +25,14 @@ const SearchScreen = ({ navigation }) => {
             </View>
         );
     };
+
+    useEffect(() => {
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+            navigation.goBack(); // Ini akan otomatis memicu animasi kebalikan dari slide_from_bottom
+            return true;
+        });
+        return () => backHandler.remove();
+    }, [navigation]);
 
     return (
         <View style={{ paddingTop: insets.top }} className="flex-1 bg-zinc-bg">

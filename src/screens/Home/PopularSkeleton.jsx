@@ -6,11 +6,6 @@ const { width } = Dimensions.get('window');
 const PopularSkeleton = () => {
     return (
         <View className="mt-8">
-            {/* Header Skeleton */}
-            <View className="flex-row justify-between items-center mb-5 px-4">
-                <View className="h-7 w-32 bg-zinc-800 rounded-lg animate-pulse" />
-                <View className="h-5 w-16 bg-zinc-800 rounded-lg animate-pulse" />
-            </View>
 
             <ScrollView
                 horizontal

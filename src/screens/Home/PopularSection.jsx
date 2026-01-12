@@ -18,12 +18,11 @@ const PopularSection = ({ navigation }) => {
         }
         return pairs;
     }, [popularManhwa]);
-
-    if (loading) return <PopularSkeleton />;
+    
 
     return (
         <View className="mt-8">
-            <View className="flex-row justify-between items-center mb-5 px-4">
+            <View className="flex-row justify-between items-center mb-5">
                 <View>
                     <Text className="text-white text-2xl font-bold tracking-tighter">Populer</Text>
                     <View className="h-1 w-8 bg-primary-600 rounded-full mt-1" />
@@ -37,25 +36,29 @@ const PopularSection = ({ navigation }) => {
                 contentOffset={{ x: 15, y: 0 }}
                 contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
             >
-                {popularManhwa?.[0] && (
-                    <FeaturedCard
-                        item={popularManhwa[0]}
-                        onPress={() => navigation.navigate('Detail', { id: popularManhwa[0].manga_id })}
-                    />
+                {loading ? (
+                    <PopularSkeleton />
+                ) : popularManhwa?.[0] && (
+                    <>
+                        <FeaturedCard
+                            item={popularManhwa[0]}
+                            onPress={() => navigation.navigate('Detail', { id: popularManhwa[0].manga_id })}
+                        />
+                        {pairedData.map((pair, index) => (
+                            <View key={`column-${index}`} className="justify-between" style={{ gap: 12 }}>
+                                {pair.map((item) => (
+                                    <MiniCard
+                                        key={item.manga_id}
+                                        item={item}
+                                        index={popularManhwa.indexOf(item)}
+                                        onPress={() => navigation.navigate('Detail', { id: item.manga_id })}
+                                    />
+                                ))}
+                            </View>
+                        ))}
+                    </>
                 )}
 
-                {pairedData.map((pair, index) => (
-                    <View key={`column-${index}`} className="justify-between" style={{ gap: 12 }}>
-                        {pair.map((item) => (
-                            <MiniCard
-                                key={item.manga_id}
-                                item={item}
-                                index={popularManhwa.indexOf(item)}
-                                onPress={() => navigation.navigate('Detail', { id: item.manga_id })}
-                            />
-                        ))}
-                    </View>
-                ))}
             </ScrollView>
         </View>
     );

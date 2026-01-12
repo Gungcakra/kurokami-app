@@ -1,24 +1,24 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import DetailScreen from '../screens/Detail/DetailScreen';
 import ChapterScreen from '../screens/Chapter/ChapterScreen';
 import TabNavigator from './TabNavigator';
 import SearchScreen from '../screens/Home/SearchScreen';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 export default function AppNavigator() {
   return (
-    <Stack.Navigator className="bg-zinc-bg"
+    <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        animation: 'fade_from_bottom',
-        animationDuration: 300,
-        contentStyle: { backgroundColor: '#121215' }
+        animationDuration: 400,
+        contentStyle: { backgroundColor: '#121215' },
+        ...TransitionPresets.SlideFromRightIOS
       }}
     >
-    
       <Stack.Screen
         name="Welcome"
         component={WelcomeScreen}
@@ -36,7 +36,8 @@ export default function AppNavigator() {
         component={DetailScreen}
         options={{
           animation: 'slide_from_right',
-          gestureEnabled: true,
+          presentation: 'card',
+          gestureResponseDistance: 500,
         }}
       />
 
@@ -44,8 +45,9 @@ export default function AppNavigator() {
         name="Read"
         component={ChapterScreen}
         options={{
-          animation: 'simple_push', 
+          animation: 'simple_push',
           orientation: 'portrait',
+          gestureResponseDistance: 500,
         }}
       />
 
@@ -53,8 +55,10 @@ export default function AppNavigator() {
         name="Search"
         component={SearchScreen}
         options={{
-          animation: 'slide_from_bottom',
-          gestureEnabled: true,
+          contentStyle: { backgroundColor: 'transparent' },
+          cardOverlayEnabled: true,
+          gestureResponseDistance: 500,
+          ...TransitionPresets.ModalSlideFromBottomIOS,
         }}
       />
     </Stack.Navigator>

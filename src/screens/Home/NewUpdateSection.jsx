@@ -2,14 +2,43 @@ import { View, Text, FlatList } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ManhwaCard from '../../components/ManhwaCard';
 import ManhwaCardSkeleton from '../../components/ManhwaCardSkeleton';
-import { useManhwa } from '../../hooks/home';
+import { useUpdate } from '../../hooks/home';
+import { useState } from 'react';
 const NewUpdateSection = ({ navigation }) => {
-    const { newUpdates, loading, error } = useManhwa();
+
+    const [selectedType, setSelectedType] = useState('all');
+    const { newUpdates, loading, error } = useUpdate(selectedType);
+
+    const filterButtons = [
+        { label: 'Semua', value: 'all' },
+        { label: 'Manhwa', value: 'manhwa' },
+        { label: 'Manhua', value: 'manhua' },
+        { label: 'Manga', value: 'manga' },
+    ];
+
     return (
         <View className="mt-8">
             <View className="flex-row justify-between items-end mb-4">
-                <Text className="text-zinc-text text-2xl font-bold">  Update Terbaru</Text>
+                <View>
+                    <Text className="text-white text-2xl font-bold tracking-tighter">Update Terbaru</Text>
+                    <View className="h-1 w-8 bg-primary-600 rounded-full mt-1" />
+                </View>
                 <Text className="text-primary-400 text-lg font-semibold">Semua</Text>
+            </View>
+
+            <View className="flex-row gap-2 mb-4">
+                {filterButtons.map((btn) => (
+                    <Text
+                        key={btn.value}
+                        onPress={() => setSelectedType(btn.value)}
+                        className={`px-4 py-2 rounded-lg font-semibold ${selectedType === btn.value
+                                ? 'bg-primary-600 text-white'
+                                : 'bg-zinc-800 text-zinc-400'
+                            }`}
+                    >
+                        {btn.label}
+                    </Text>
+                ))}
             </View>
 
             {error ? (
@@ -27,7 +56,7 @@ const NewUpdateSection = ({ navigation }) => {
                 />
             ) : (
                 <FlatList
-                    data={newUpdates?.slice(0, 9)}
+                    data={newUpdates}
                     renderItem={({ item }) => (
                         <ManhwaCard
                             item={item}
@@ -43,8 +72,6 @@ const NewUpdateSection = ({ navigation }) => {
                 />
             )}
         </View>
-
-
     );
 }
 

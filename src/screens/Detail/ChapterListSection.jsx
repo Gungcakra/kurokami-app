@@ -45,7 +45,7 @@ export const ChapterListSection = ({
                 />
             ) : (
                 item.length > 0 ? (
-                    item.map((chapter, index) => (
+                    item.map((chapter) => (
                         <TouchableOpacity
                             key={chapter.id}
                             testID={`chapter-${chapter.id}`}
