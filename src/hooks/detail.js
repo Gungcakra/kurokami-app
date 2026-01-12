@@ -38,9 +38,11 @@ export const useChapterList = (manhwaId) => {
         if (!manhwaId) return;
         setLoading(true);
         try {
-            const result = await apiService.getChapterList(manhwaId, page, order, search);
+            // Tambahkan angka 20 (atau pageSize yang diinginkan) di urutan ketiga
+            const result = await apiService.getChapterList(manhwaId, page, 20, order, search);
+
             setChapters(result?.data || []);
-            setTotalPage(result?.meta?.total_page || 5);
+            setTotalPage(result?.meta?.total_page || 1);
         } catch (err) {
             console.error(err);
         } finally {

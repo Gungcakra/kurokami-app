@@ -13,16 +13,26 @@ const fetchData = async (endpoint) => {
 };
 
 export const apiService = {
-    getNewUpdate: () => fetchData('/v1/manga/list?type=project&page=1&page_size=30&is_update=true&sort=latest&sort_order=desc'),
+    getNewUpdate: (page = 1, pageSize = 30, format = 'all') => fetchData(`/v1/manga/list?${format === 'all' ? '' : `format=${format}`}&type=project&page=${page}&page_size=${pageSize}&is_update=true&sort=latest&sort_order=desc`),
 
-    getTopManga: () => fetchData('/v1/manga/list?type=project&page=1&page_size=24&is_update=true&sort=latest&sort_order=desc'),
+    getPopular: (page = 1, pageSize = 24) => fetchData(`/v1/manga/list?page=${page}&page_size=${pageSize}&genre_include_mode=or&genre_exclude_mode=or&sort=popularity&sort_order=desc`),
 
-    getRecommend: () => fetchData('/v1/manga/list?type=mirror&page=1&page_size=24&is_update=true&sort=latest&sort_order=desc'),
+    getTop: (page = 1, pageSize = 24) => fetchData(`/v1/manga/list?page=${page}&page_size=${pageSize}&genre_include_mode=or&genre_exclude_mode=or&sort=rating&sort_order=desc`),
+
+    getRecommend: (page = 1, pageSize = 8) => fetchData(`/v1/manga/list?page=${page}&page_size=${pageSize}&category=explore-list-2`),
+
+    getCompleted: (page = 1, pageSize = 24) => fetchData(`/v1/manga/list?page=${page}&page_size=${pageSize}&genre_include_mode=or&genre_exclude_mode=or&status=completed&sort=latest&sort_order=desc`),
+
+    getManhwa: (page = 1, pageSize = 10) => fetchData(`/v1/manga/list${format === 'all' ? '' : '?format=manhwa'}&page=${page}&page_size=${pageSize}&is_recommended=true&sort=latest&sort_order=desc`),
+
+    getManga: (page = 1, pageSize = 10) => fetchData(`/v1/manga/list${format === 'all' ? '' : '?format=manga'}&page=${page}&page_size=${pageSize}&is_recommended=true&sort=latest&sort_order=desc`),
+
+    getManhua: (page = 1, pageSize = 10) => fetchData(`/v1/manga/list${format === 'all' ? '' : '?format=manhua'}&page=${page}&page_size=${pageSize}&is_recommended=true&sort=latest&sort_order=desc`),
 
     getDetail: (manhwaId) => fetchData(`/v1/manga/detail/${manhwaId}`),
 
-    getChapterList: (manhwaId, page = 1, order = 'desc', search = '') =>
-        fetchData(`/v1/chapter/${manhwaId}/list?page=${page}&page_size=20&sort_by=chapter_number&sort_order=${order}${search ? `&search=${search}` : ''}`),
+    getChapterList: (manhwaId, page = 1, pageSize = 20, order = 'desc', search = '') =>
+        fetchData(`/v1/chapter/${manhwaId}/list?page=${page}&page_size=${pageSize}&sort_by=chapter_number&sort_order=${order}${search ? `&search=${search}` : ''}`),
 
     getChapterDetail: (chapterId) => fetchData(`/v1/chapter/detail/${chapterId}`),
 

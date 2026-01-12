@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 
-export const useManhwa = () => {
+export const useUpdate = (selectedType = 'all') => {
     const [newUpdates, setNewUpdates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [format, setFormat] = useState(selectedType);
 
-    const fetchHomeData = async () => {
+    const fetchHomeData = async (page = 1, pageSize = 30, selectedFormat = format) => {
         setLoading(true);
         try {
-            const result = await apiService.getNewUpdate();
+            const result = await apiService.getNewUpdate(page, pageSize, selectedFormat);
             if (result && result.data) {
-
                 setNewUpdates(result.data);
             }
         } catch (err) {
@@ -21,11 +21,16 @@ export const useManhwa = () => {
         }
     };
 
-    useEffect(() => {
-        fetchHomeData();
-    }, []);
+    const changeFormat = (newFormat) => {
+        setFormat(newFormat);
+        fetchHomeData(1, 30, newFormat);
+    };
 
-    return { newUpdates, loading, error, refresh: fetchHomeData };
+    useEffect(() => {
+        fetchHomeData(1, 30, selectedType);
+    }, [selectedType]);
+
+    return { newUpdates, loading, error, format, changeFormat, refresh: fetchHomeData };
 };
 
 export const useGenres = () => {
@@ -83,7 +88,7 @@ export const usePopularManhwa = () => {
     const fetchPopularManhwa = async () => {
         setLoading(true);
         try {
-            const result = await apiService.getTopManga();
+            const result = await apiService.getPopular();
             if (result && result.data) {
                 setPopularManhwa(result.data);
             }
@@ -98,6 +103,54 @@ export const usePopularManhwa = () => {
         fetchPopularManhwa();
     }, []);
     return { popularManhwa, loading, error, getPopularManhwa: fetchPopularManhwa };
+}
+
+export const useTop = () => {
+    const [topManhwa, setTopManhwa] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const fetchTopManhwa = async () => {
+        setLoading(true);
+        try {
+            const result = await apiService.getTop();
+            if (result && result.data) {
+                setTopManhwa(result.data);
+            }
+        } catch (err) {
+            setError('Gagal mengambil data manhwa teratas');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchTopManhwa();
+    }, []);
+    return { topManhwa, loading, error, getTopManhwa: fetchTopManhwa };
+}
+
+export const useComplete = () => {
+    const [completedManhwa, setCompletedManhwa] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const fetchCompletedManhwa = async () => {
+        setLoading(true);
+        try {
+            const result = await apiService.getCompleted();
+            if (result && result.data) {
+                setCompletedManhwa(result.data);
+            }
+        } catch (err) {
+            setError('Gagal mengambil data manhwa selesai');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchCompletedManhwa();
+    }, []);
+    return { completedManhwa, loading, error, getCompletedManhwa: fetchCompletedManhwa };
 }
 
 export const useSearchManhwa = () => {
