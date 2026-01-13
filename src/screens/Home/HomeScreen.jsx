@@ -16,7 +16,7 @@ const HomeScreen = ({ navigation }) => {
       <HeaderSection navigation={navigation} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        className="px-4 py-4 mt-20"
+        className="px-4 pb-4 mt-20"
         scrollEventThrottle={16}
         nestedScrollEnabled={true}
         contentContainerStyle={{

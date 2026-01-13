@@ -6,6 +6,7 @@ import DetailScreen from '../screens/Detail/DetailScreen';
 import ChapterScreen from '../screens/Chapter/ChapterScreen';
 import TabNavigator from './TabNavigator';
 import SearchScreen from '../screens/Home/SearchScreen';
+import AllScreen from '../screens/All/AllScreen';
 
 const Stack = createStackNavigator();
 
@@ -59,6 +60,16 @@ export default function AppNavigator() {
           cardOverlayEnabled: true,
           gestureResponseDistance: 500,
           ...TransitionPresets.ModalSlideFromBottomIOS,
+        }}
+      />
+
+      <Stack.Screen
+        name="All"
+        component={AllScreen}
+        options={{
+          animation: 'slide_from_right',
+          presentation: 'card',
+          gestureResponseDistance: 500,
         }}
       />
     </Stack.Navigator>

@@ -1,223 +1,414 @@
-import { useState, useEffect } from 'react';
-import { apiService } from '../services/api';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { apiService } from "../services/api";
 
-export const useUpdate = (selectedType = 'all') => {
-    const [newUpdates, setNewUpdates] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [format, setFormat] = useState(selectedType);
+export const useUpdate = (selectedType = "all") => {
+  const [newUpdates, setNewUpdates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [format, setFormat] = useState(selectedType);
 
-    const fetchHomeData = async (page = 1, pageSize = 30, selectedFormat = format) => {
-        setLoading(true);
-        try {
-            const result = await apiService.getNewUpdate(page, pageSize, selectedFormat);
-            if (result && result.data) {
-                setNewUpdates(result.data);
-            }
-        } catch (err) {
-            setError('Gagal mengambil data terbaru');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const fetchHomeData = async (
+    page = 1,
+    pageSize = 30,
+    selectedFormat = format
+  ) => {
+    setLoading(true);
+    try {
+      const result = await apiService.getNewUpdate(
+        page,
+        pageSize,
+        selectedFormat
+      );
+      if (result && result.data) {
+        setNewUpdates(result.data);
+      }
+    } catch (err) {
+      setError("Gagal mengambil data terbaru");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const changeFormat = (newFormat) => {
-        setFormat(newFormat);
-        fetchHomeData(1, 30, newFormat);
-    };
+  const changeFormat = (newFormat) => {
+    setFormat(newFormat);
+    fetchHomeData(1, 30, newFormat);
+  };
 
-    useEffect(() => {
-        fetchHomeData(1, 30, selectedType);
-    }, [selectedType]);
+  useEffect(() => {
+    fetchHomeData(1, 30, selectedType);
+  }, [selectedType]);
 
-    return { newUpdates, loading, error, format, changeFormat, refresh: fetchHomeData };
+  return {
+    newUpdates,
+    loading,
+    error,
+    format,
+    changeFormat,
+    refresh: fetchHomeData,
+  };
 };
 
 export const useGenres = () => {
-    const [genres, setGenres] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const fetchGenres = async () => {
-        setLoading(true);
-        try {
-            const result = await apiService.getGenres();
-            if (result && result.data) {
-                setGenres(result.data);
-            }
-        } catch (err) {
-            setError('Gagal mengambil data genre');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const [genres, setGenres] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const fetchGenres = async () => {
+    setLoading(true);
+    try {
+      const result = await apiService.getGenres();
+      if (result && result.data) {
+        setGenres(result.data);
+      }
+    } catch (err) {
+      setError("Gagal mengambil data genre");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        fetchGenres();
-    }, []);
-    return { genres, loading, error, getGenres: fetchGenres };
+  useEffect(() => {
+    fetchGenres();
+  }, []);
+  return { genres, loading, error, getGenres: fetchGenres };
 };
 
 export const useRecommendations = () => {
-    const [recommendations, setRecommendations] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const fetchRecommendations = async () => {
-        setLoading(true);
-        try {
-            const result = await apiService.getRecommend();
-            if (result && result.data) {
-                setRecommendations(result.data);
-            }
-        } catch (err) {
-            setError('Gagal mengambil data rekomendasi');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const fetchRecommendations = async () => {
+    setLoading(true);
+    try {
+      const result = await apiService.getRecommend();
+      if (result && result.data) {
+        setRecommendations(result.data);
+      }
+    } catch (err) {
+      setError("Gagal mengambil data rekomendasi");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        fetchRecommendations();
-    }, []);
-    return { recommendations, loading, error, getRecommendations: fetchRecommendations };
-}
+  useEffect(() => {
+    fetchRecommendations();
+  }, []);
+  return {
+    recommendations,
+    loading,
+    error,
+    getRecommendations: fetchRecommendations,
+  };
+};
 
 export const usePopularManhwa = () => {
-    const [popularManhwa, setPopularManhwa] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const fetchPopularManhwa = async () => {
-        setLoading(true);
-        try {
-            const result = await apiService.getPopular();
-            if (result && result.data) {
-                setPopularManhwa(result.data);
-            }
-        } catch (err) {
-            setError('Gagal mengambil data manhwa populer');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const [popularManhwa, setPopularManhwa] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const fetchPopularManhwa = async () => {
+    setLoading(true);
+    try {
+      const result = await apiService.getPopular();
+      if (result && result.data) {
+        setPopularManhwa(result.data);
+      }
+    } catch (err) {
+      setError("Gagal mengambil data manhwa populer");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        fetchPopularManhwa();
-    }, []);
-    return { popularManhwa, loading, error, getPopularManhwa: fetchPopularManhwa };
-}
+  useEffect(() => {
+    fetchPopularManhwa();
+  }, []);
+  return {
+    popularManhwa,
+    loading,
+    error,
+    getPopularManhwa: fetchPopularManhwa,
+  };
+};
 
 export const useTop = () => {
-    const [topManhwa, setTopManhwa] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const fetchTopManhwa = async () => {
-        setLoading(true);
-        try {
-            const result = await apiService.getTop();
-            if (result && result.data) {
-                setTopManhwa(result.data);
-            }
-        } catch (err) {
-            setError('Gagal mengambil data manhwa teratas');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const [topManhwa, setTopManhwa] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const fetchTopManhwa = async () => {
+    setLoading(true);
+    try {
+      const result = await apiService.getTop();
+      if (result && result.data) {
+        setTopManhwa(result.data);
+      }
+    } catch (err) {
+      setError("Gagal mengambil data manhwa teratas");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        fetchTopManhwa();
-    }, []);
-    return { topManhwa, loading, error, getTopManhwa: fetchTopManhwa };
-}
+  useEffect(() => {
+    fetchTopManhwa();
+  }, []);
+  return { topManhwa, loading, error, getTopManhwa: fetchTopManhwa };
+};
 
 export const useComplete = () => {
-    const [completedManhwa, setCompletedManhwa] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const fetchCompletedManhwa = async () => {
-        setLoading(true);
-        try {
-            const result = await apiService.getCompleted();
-            if (result && result.data) {
-                setCompletedManhwa(result.data);
-            }
-        } catch (err) {
-            setError('Gagal mengambil data manhwa selesai');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const [completedManhwa, setCompletedManhwa] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const fetchCompletedManhwa = async () => {
+    setLoading(true);
+    try {
+      const result = await apiService.getCompleted();
+      if (result && result.data) {
+        setCompletedManhwa(result.data);
+      }
+    } catch (err) {
+      setError("Gagal mengambil data manhwa selesai");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        fetchCompletedManhwa();
-    }, []);
-    return { completedManhwa, loading, error, getCompletedManhwa: fetchCompletedManhwa };
-}
+  useEffect(() => {
+    fetchCompletedManhwa();
+  }, []);
+  return {
+    completedManhwa,
+    loading,
+    error,
+    getCompletedManhwa: fetchCompletedManhwa,
+  };
+};
 
 export const useSearchManhwa = () => {
-    const [searchResults, setSearchResults] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [error, setError] = useState(null);
-    const [keyword, setKeyword] = useState('');
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState(null);
+  const [keyword, setKeyword] = useState("");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-    const searchManhwa = async (searchKeyword, pageNumber = 1, isNextPage = false) => {
-        if (!searchKeyword) {
-            setSearchResults([]);
-            return;
-        }
+  const searchManhwa = async (
+    searchKeyword,
+    pageNumber = 1,
+    isNextPage = false
+  ) => {
+    if (!searchKeyword) {
+      setSearchResults([]);
+      return;
+    }
 
-        if (isNextPage) setLoadingMore(true);
-        else setLoading(true);
+    if (isNextPage) setLoadingMore(true);
+    else setLoading(true);
 
-        try {
-            const result = await apiService.searchManga(searchKeyword, pageNumber);
-            const newData = result?.data || [];
-            
-            if (isNextPage) {
-                setSearchResults(prev => [...prev, ...newData]);
-            } else {
-                setSearchResults(newData);
-            }
+    try {
+      const result = await apiService.searchManga(searchKeyword, pageNumber);
+      const newData = result?.data || [];
 
-            // Cek apakah masih ada halaman selanjutnya
-            setHasMore(newData.length > 0); 
-            setPage(pageNumber);
-        } catch (err) {
-            setError('Gagal mencari manhwa');
-        } finally {
-            setLoading(false);
-            setLoadingMore(false);
-        }
-    };
+      if (isNextPage) {
+        setSearchResults((prev) => [...prev, ...newData]);
+      } else {
+        setSearchResults(newData);
+      }
 
-    // Debounce Logic: Menunggu user berhenti mengetik selama 500ms
-    useEffect(() => {
-        const delayDebounce = setTimeout(() => {
-            if (keyword) {
-                searchManhwa(keyword, 1, false);
-            } else {
-                setSearchResults([]);
-            }
-        }, 500);
+      // Cek apakah masih ada halaman selanjutnya
+      setHasMore(newData.length > 0);
+      setPage(pageNumber);
+    } catch (err) {
+      setError("Gagal mencari manhwa");
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
 
-        return () => clearTimeout(delayDebounce);
-    }, [keyword]);
+  // Debounce Logic: Menunggu user berhenti mengetik selama 500ms
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (keyword) {
+        searchManhwa(keyword, 1, false);
+      } else {
+        setSearchResults([]);
+      }
+    }, 500);
 
-    const loadMore = () => {
-        if (!loading && !loadingMore && hasMore) {
-            searchManhwa(keyword, page + 1, true);
-        }
-    };
+    return () => clearTimeout(delayDebounce);
+  }, [keyword]);
 
-    return { 
-        searchResults, 
-        loading, 
-        loadingMore, 
-        error, 
-        keyword, 
-        setKeyword, 
-        loadMore 
-    };
+  const loadMore = () => {
+    if (!loading && !loadingMore && hasMore) {
+      searchManhwa(keyword, page + 1, true);
+    }
+  };
+
+  return {
+    searchResults,
+    loading,
+    loadingMore,
+    error,
+    keyword,
+    setKeyword,
+    loadMore,
+  };
+};
+
+export const useManhwaByType = (type) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchData = async (pageNumber, isNextPage = false) => {
+    if (isNextPage) setLoadingMore(true);
+    else setLoading(true);
+
+    try {
+      let result;
+      const pageSize = 24; // Sesuaikan dengan kebutuhan
+
+      // Router API berdasarkan type
+      switch (type) {
+        case "new-update":
+          result = await apiService.getNewUpdate(pageNumber, pageSize, "all");
+          break;
+        case "recommendation":
+          result = await apiService.getRecommend(pageNumber, pageSize);
+          break;
+        case "popular":
+          result = await apiService.getPopular(pageNumber, pageSize);
+          break;
+        case "complete":
+          result = await apiService.getCompleted(pageNumber, pageSize);
+          break;
+        case "top":
+          result = await apiService.getTop(pageNumber, pageSize);
+          break;
+        default:
+          result = { data: [] };
+      }
+
+      const newData = result?.data || [];
+
+      if (isNextPage) {
+        setData((prev) => [...prev, ...newData]);
+      } else {
+        setData(newData);
+      }
+
+      // Jika data yang datang kurang dari pageSize, berarti sudah habis
+      setHasMore(newData.length >= pageSize);
+      setPage(pageNumber);
+    } catch (err) {
+      setError("Gagal memuat data");
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  // Reset data dan muat ulang jika type berubah
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+    fetchData(1, false);
+  }, [type]);
+
+  const loadMore = () => {
+    if (!loading && !loadingMore && hasMore) {
+      fetchData(page + 1, true);
+    }
+  };
+
+  const refresh = () => {
+    setPage(1);
+    fetchData(1, false);
+  };
+
+  return { data, loading, loadingMore, error, loadMore, refresh, hasMore };
+};
+
+export const useExplore = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const currentPage = useRef(1);
+
+  const [filters, setFilters] = useState({
+    pageSize: 12,
+    genres: [],
+    status: "",
+    sort: "latest",
+    format: "all",
+    sortOrder: "desc",
+    keyword: "", // Tetap gunakan keyword
+  });
+
+  const fetchExplore = useCallback(async (isNextPage = false) => {
+    if (isNextPage) {
+      if (loadingMore || !hasMore) return;
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+      currentPage.current = 1; 
+    }
+
+    try {
+      const pageToFetch = isNextPage ? currentPage.current + 1 : 1;
+
+      const result = await apiService.getExplore({
+        ...filters, // Di sini keyword akan terkirim ke apiService
+        page: pageToFetch,
+        pageSize: filters.pageSize,
+      });
+
+      const newData = result?.data || [];
+      setData((prev) => (isNextPage ? [...prev, ...newData] : newData));
+      setHasMore(newData.length >= filters.pageSize);
+
+      if (newData.length > 0) {
+        currentPage.current = pageToFetch;
+      }
+    } catch (err) {
+      console.error("Explore Error:", err);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  }, [filters, loadingMore, hasMore]);
+
+  // GABUNGKAN SEMUA EFFECT DI SINI (DEBOUNCE)
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      fetchExplore(false);
+    }, 500); // Tunggu 500ms setelah user berhenti input/pilih filter
+
+    return () => clearTimeout(delayDebounce);
+  }, [
+    filters.keyword, 
+    filters.genres, 
+    filters.status, 
+    filters.format, 
+    filters.sort, 
+    filters.sortOrder
+  ]);
+
+  const updateFilter = (key, value) => {
+    // Jangan setData([]) di sini agar transisi loading lebih halus (loading state sudah menghandle UI)
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const loadMore = () => {
+    if (!loading && !loadingMore && hasMore) {
+      fetchExplore(true);
+    }
+  };
+
+  return { data, loading, loadingMore, filters, updateFilter, loadMore, hasMore };
 };

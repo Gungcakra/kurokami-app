@@ -53,13 +53,13 @@ export default function ReadScreen({ navigation, route }) {
         <View className="flex-1 bg-black">
             <FlatList
                 data={chapterDetail?.chapter?.data || []}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(item, index) => index}
                 showsVerticalScrollIndicator={false}
                 removeClippedSubviews={true}
                 initialNumToRender={5}
                 maxToRenderPerBatch={5}
                 windowSize={10}
-                // Gunakan callback yang stabil
+                
                 renderItem={({ item }) => (
                     <MangaImageItem
                         uri={`${chapterDetail.base_url}/${chapterDetail.chapter?.path}/${item}`}
@@ -90,7 +90,7 @@ export default function ReadScreen({ navigation, route }) {
                                     {manhwaDetail?.title || 'Loading...'}
                                 </Text>
 
-                                {/* Bagian statis (Tidak bisa diklik) */}
+
                                 <Text className="text-zinc-500 font-bold text-lg">{' > '}</Text>
 
                                 <Text className="text-red-500 font-bold text-lg">
