@@ -3,83 +3,84 @@ import { View, Text, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UI
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Animatable from 'react-native-animatable';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { LinearGradient } from 'expo-linear-gradient'; // Pastikan sudah install ini
+import { LinearGradient } from 'expo-linear-gradient';
 
-// Aktifkan LayoutAnimation untuk Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 const InfoScreen = () => {
   const insets = useSafeAreaInsets();
-  // State untuk menyimpan index mana yang sedang terbuka
   const [expandedIndex, setExpandedIndex] = useState(null);
 
   const toggleCollapse = (index) => {
-    // Animasi transisi smooth saat buka/tutup
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
   const infoItems = [
     { 
-        icon: 'information-circle-outline', 
-        title: 'About', 
-        description: 'Learn more about our app mission', 
-        content: 'This app is designed to provide the best user experience with high-performance animations and modern UI.',
-        color: 'text-blue-400', 
-        bg: 'bg-blue-400/10' 
+        icon: 'book-outline', 
+        title: 'Project Mission', 
+        description: 'Visi dibalik platform kurokami', 
+        content: 'Kurokami dibangun untuk memberikan akses baca manhwa tercepat dengan kualitas gambar HD tanpa beban iklan yang mengganggu kenyamanan scrolling.',
+        color: '#60A5FA', 
+        bg: 'bg-blue-500/10' 
     },
     { 
-        icon: 'shield-checkmark-outline', 
-        title: 'Privacy', 
-        description: 'Your privacy and data security', 
-        content: 'We do not sell your data. Everything is encrypted and stored securely following international standards.',
-        color: 'text-emerald-400', 
-        bg: 'bg-emerald-400/10' 
+        icon: 'shield-half-outline', 
+        title: 'Data & Privacy', 
+        description: 'Keamanan library & riwayat baca', 
+        content: 'Data bookmark dan riwayat baca kamu disimpan secara lokal dan terenkripsi. Kami tidak mengumpulkan data pribadi di luar kebutuhan sinkronisasi akun.',
+        color: '#34D399', 
+        bg: 'bg-emerald-500/10' 
     },
     { 
-        icon: 'file-document-outline', 
-        title: 'Terms', 
-        description: 'Terms and conditions of service', 
-        content: 'By using this app, you agree to our terms of service and community guidelines.',
-        color: 'text-amber-400', 
-        bg: 'bg-amber-400/10' 
+        icon: 'Skull-outline', 
+        title: 'Community Rules', 
+        description: 'Pedoman komentar & interaksi', 
+        content: 'Dilarang melakukan spoiler di kolom komentar, spamming, atau promosi platform ilegal lainnya. Mari jaga komunitas tetap sehat.',
+        color: '#FBBF24', 
+        bg: 'bg-amber-500/10' 
     },
     { 
-        icon: 'heart-outline', 
-        title: 'Support', 
-        description: 'Get help and support from us', 
-        content: 'Contact us via email at support@example.com or visit our help center 24/7.',
-        color: 'text-red-500', 
+        icon: 'cafe-outline', 
+        title: 'Support Dev', 
+        description: 'Bantu kami tetap hidup', 
+        content: 'Aplikasi ini dikelola secara independen. Kamu bisa mendukung server kami melalui donasi di menu "Buy Me a Coffee" agar update tetap lancar.',
+        color: '#EF4444', 
         bg: 'bg-red-500/10' 
     },
   ];
 
   return (
-    <View className="flex-1 bg-[#121215]">
+    <View className="flex-1 bg-[#0F0F12]">
       <ScrollView 
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 120 }}
       >
         {/* HERO HEADER */}
-        <View style={{ paddingTop: insets.top + 40 }} className="px-6 mb-10">
-          <Animatable.View animation="fadeInLeft" duration={800}>
-            <View className="bg-red-600 self-start px-3 py-1 rounded-md mb-4">
-              <Text className="text-white text-[10px] font-black tracking-[2px]">APP INFO</Text>
+        <View style={{ paddingTop: insets.top + 50 }} className="px-8 mb-12">
+          <Animatable.View animation="fadeIn" duration={1000}>
+            <View className="flex-row items-center mb-4">
+              <View className="h-[2px] w-8 bg-red-600 mr-3" />
+              <Text className="text-red-600 text-[12px] font-black tracking-[3px] uppercase">
+                Application Info
+              </Text>
             </View>
             
-            <Text className="text-white text-4xl font-black leading-tight">
-              Settings &{"\n"}Information
+            <Text className="text-white text-5xl font-black tracking-tighter leading-[48px]">
+              Informasi{"\n"}<Text className="text-zinc-700">Aplikasi.</Text>
             </Text>
-            <View className="flex-row items-center mt-2">
-              <View className="w-2 h-2 rounded-full bg-emerald-500 mr-2" />
-              <Text className="text-zinc-500 font-medium text-sm">Version 1.0.0 (Stable)</Text>
+            
+            <View className="flex-row items-center mt-6 bg-zinc-900/50 self-start px-4 py-2 rounded-full border border-white/5">
+              <View className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+              <Text className="text-zinc-400 font-bold text-xs">V.1.0.1 Stable Build</Text>
             </View>
           </Animatable.View>
         </View>
 
-        {/* MENU SECTION WITH COLLAPSE */}
+        {/* MENU SECTION */}
         <View className="px-6">
           {infoItems.map((item, index) => {
             const isExpanded = expandedIndex === index;
@@ -88,40 +89,41 @@ const InfoScreen = () => {
               <Animatable.View 
                 key={index}
                 animation="fadeInUp"
-                delay={200 + (index * 100)}
-                duration={600}
+                delay={index * 100}
                 className="mb-4"
               >
                 <TouchableOpacity 
-                  activeOpacity={0.7}
+                  activeOpacity={0.8}
                   onPress={() => toggleCollapse(index)}
-                  className={`bg-zinc-900/50 flex-row items-center p-5 rounded-[28px] border ${isExpanded ? 'border-red-500/50' : 'border-zinc-800'}`}
+                  className={`bg-zinc-900/40 flex-row items-center p-5 rounded-[32px] border ${isExpanded ? 'border-red-600/40 bg-zinc-900/80' : 'border-white/[0.03]'}`}
                 >
-                  <View className={`${item.bg} w-12 h-12 rounded-2xl items-center justify-center`}>
-                    <Ionicons name={item.icon} size={24} className={item.color} color="currentColor" />
+                  <View className={`${item.bg} w-14 h-14 rounded-2xl items-center justify-center border border-white/5`}>
+                    <Ionicons name={item.icon} size={28} color={item.color} />
                   </View>
 
-                  <View className="flex-1 ml-4">
-                    <Text className="text-white text-lg font-bold">{item.title}</Text>
-                    <Text className="text-zinc-500 text-xs mt-0.5">{item.description}</Text>
+                  <View className="flex-1 ml-5">
+                    <Text className="text-white text-[17px] font-black tracking-tight">{item.title}</Text>
+                    <Text className="text-zinc-500 text-[13px] font-medium mt-0.5">{item.description}</Text>
                   </View>
 
-                  <Animatable.View 
-                    transition="rotate"
-                    style={{ transform: [{ rotate: isExpanded ? '90deg' : '0deg' }] }}
-                    className="bg-zinc-800 p-1.5 rounded-full"
-                  >
-                    <Ionicons name="chevron-forward" size={14} color="#71717A" />
-                  </Animatable.View>
+                  <View className={`${isExpanded ? 'bg-red-600' : 'bg-zinc-800'} p-2 rounded-xl`}>
+                    <Ionicons 
+                      name={isExpanded ? "chevron-up" : "chevron-forward"} 
+                      size={16} 
+                      color={isExpanded ? "white" : "#A1A1AA"} 
+                    />
+                  </View>
                 </TouchableOpacity>
 
-                {/* COLLAPSIBLE CONTENT */}
                 {isExpanded && (
-                  <View className="px-6 py-4 bg-zinc-900/30 mx-4 rounded-b-3xl border-x border-b border-zinc-800/50">
-                    <Text className="text-zinc-400 text-sm leading-6">
+                  <Animatable.View 
+                    animation="fadeIn"
+                    className="px-8 py-6 bg-zinc-900/20 mx-4 rounded-b-[32px] border-x border-b border-white/[0.03]"
+                  >
+                    <Text className="text-white text-sm leading-7 font-medium">
                       {item.content}
                     </Text>
-                  </View>
+                  </Animatable.View>
                 )}
               </Animatable.View>
             );
@@ -129,23 +131,25 @@ const InfoScreen = () => {
         </View>
 
         {/* FOOTER */}
-        <View className="mt-12 items-center px-10">
-          <View className="w-12 h-[1px] bg-zinc-800 mb-6" />
-          <Text className="text-zinc-600 text-[11px] text-center font-bold tracking-[1px] uppercase">
-            Designed for the future of mobile experience
+        <View className="mt-20 items-center px-12">
+          <Text className="text-zinc-700 text-[10px] text-center font-black tracking-[4px] uppercase mb-4">
+            Kurokami
           </Text>
-          <Text className="text-zinc-800 text-[10px] mt-2 font-medium">
-            © 2026 GEMINI FLIGHT NAVIGATOR
+          <View className="flex-row items-center">
+             <View className="h-[1px] flex-1 bg-zinc-900" />
+             <Ionicons name="flash" size={14} color="#3F3F46" className="mx-4" />
+             <View className="h-[1px] flex-1 bg-zinc-900" />
+          </View>
+          <Text className="text-zinc-800 text-[11px] mt-6 font-bold">
+            BUILD REPOSITORY 2026-X1
           </Text>
         </View>
       </ScrollView>
 
-      {/* FIXED GRADIENT OVERLAY */}
+      {/* BOTTOM GRADIENT MASK */}
       <LinearGradient
-        colors={['#121215', 'transparent']}
-        start={{ x: 0.5, y: 1 }}
-        end={{ x: 0.5, y: 0 }}
-        style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 100 }}
+        colors={['transparent', '#0F0F12']}
+        style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 150 }}
         pointerEvents="none"
       />
     </View>

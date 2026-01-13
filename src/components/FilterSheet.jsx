@@ -59,7 +59,7 @@ export const FilterSheet = ({ visible, onClose, filters, updateFilter, genres, s
           {/* Header */}
           <View className="flex-row justify-between items-center mb-8">
             <View>
-              <Text className="text-white text-2xl font-black italic tracking-tighter">Filter</Text>
+              <Text className="text-white text-2xl font-black tracking-tighter">Filter</Text>
               <TouchableOpacity onPress={handleClear} className="mt-1">
                 <Text className="text-white bg-primary-500 px-2 py-1 rounded text-xs font-bold uppercase tracking-widest">Reset</Text>
               </TouchableOpacity>
@@ -116,7 +116,7 @@ export const FilterSheet = ({ visible, onClose, filters, updateFilter, genres, s
           </ScrollView>
 
           {/* Action Button */}
-          <View className="pt-4">
+          <View className="py-4">
             <TouchableOpacity 
               onPress={handleApply}
               className="bg-red-600 py-4 rounded-[20px] items-center shadow-xl shadow-red-600/40"

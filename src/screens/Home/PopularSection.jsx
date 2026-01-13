@@ -1,20 +1,13 @@
-import React, { useMemo } from "react";
-import {
-  Text,
-  View,
-  ScrollView,
-  ActivityIndicator,
-  TouchableOpacity,
-} from "react-native";
+import React, { useMemo, memo } from "react";
+import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 import { usePopularManhwa } from "../../hooks/home";
 import FeaturedCard from "../../components/FeaturesCard";
 import MiniCard from "../../components/MiniCard";
 import PopularSkeleton from "./PopularSkeleton";
 
-const PopularSection = ({ navigation }) => {
-  const { popularManhwa, loading, error } = usePopularManhwa();
+const PopularSection = memo(({ navigation }) => {
+  const { popularManhwa, loading } = usePopularManhwa();
 
-  // Mengelompokkan data 1-14 menjadi pasangan untuk kolom atas-bawah
   const pairedData = useMemo(() => {
     if (!popularManhwa || popularManhwa.length <= 1) return [];
     const rest = popularManhwa.slice(1, 15);
@@ -26,28 +19,21 @@ const PopularSection = ({ navigation }) => {
   }, [popularManhwa]);
 
   return (
-    <View
-      className="mt-8"
-      onTouchStart={() =>
-        navigation.getParent()?.setOptions({ swipeEnabled: false })
-      }
-      onTouchEnd={() =>
-        navigation.getParent()?.setOptions({ swipeEnabled: true })
-      }
-      onMomentumScrollEnd={() =>
-        navigation.getParent()?.setOptions({ swipeEnabled: true })
-      }
-    >
-      <View className="flex-row justify-between items-center mb-5">
+    <View className="mt-16">
+      <View className="flex-row justify-between items-end mb-5 px-2">
         <View>
-          <Text className="text-white text-2xl font-bold tracking-tighter">
+          <View className="flex-row items-center mb-1">
+            <View className="h-[2px] w-4 bg-red-600 mr-2" />
+            <Text className="text-red-600 text-[10px] font-black tracking-[2px] uppercase">
+              Trending
+            </Text>
+          </View>
+          <Text className="text-white text-3xl font-black tracking-tighter">
             Populer
           </Text>
-          <View className="h-1 w-8 bg-primary-600 rounded-full mt-1" />
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate("All", { type: "popular" })}
-          className="pb-1"
         >
           <Text className="text-primary-400 text-lg font-semibold">Semua</Text>
         </TouchableOpacity>
@@ -56,8 +42,8 @@ const PopularSection = ({ navigation }) => {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentOffset={{ x: 15, y: 0 }}
-        contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
+        contentContainerStyle={{ paddingHorizontal: 8, gap: 12 }}
+        decelerationRate="fast"
       >
         {loading ? (
           <PopularSkeleton />
@@ -74,8 +60,8 @@ const PopularSection = ({ navigation }) => {
               />
               {pairedData.map((pair, index) => (
                 <View
-                  key={`column-${index}`}
-                  className="justify-between"
+                  key={`col-${index}`}
+                  className="justify-between py-1"
                   style={{ gap: 12 }}
                 >
                   {pair.map((item) => (
@@ -96,6 +82,6 @@ const PopularSection = ({ navigation }) => {
       </ScrollView>
     </View>
   );
-};
+});
 
 export default PopularSection;

@@ -9,7 +9,7 @@
     "newArchEnabled": true,
     "backgroundColor": "#1A1A1F",
     "splash": {
-      "image": "./assets/logo.png",
+      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#1A1A1F"
     },
@@ -19,13 +19,13 @@
     "android": {
       "package": "com.kurokami.app",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1A1A1F"
       },
       "edgeToEdgeEnabled": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.svg"
     },
     "plugins": [
       "expo-video"
