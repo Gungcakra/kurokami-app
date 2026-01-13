@@ -1,26 +1,41 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useRecommendations } from "../../hooks/home";
 import { FlatList } from "react-native";
 import ManhwaCard from "../../components/ManhwaCard";
 import ManhwaCardSkeleton from "../../components/ManhwaCardSkeleton";
 
-
 const RecommendationSection = ({ navigation }) => {
   const { recommendations, loading, error } = useRecommendations();
 
-
   return (
-    <View className="mt-8">
+    <View className="mt-8"
+    onTouchStart={() =>
+        navigation.getParent()?.setOptions({ swipeEnabled: false })
+      }
+      onTouchEnd={() =>
+        navigation.getParent()?.setOptions({ swipeEnabled: true })
+      }
+      onMomentumScrollEnd={() =>
+        navigation.getParent()?.setOptions({ swipeEnabled: true })
+      }
+    >
       <View className="flex-row justify-between items-end mb-4">
         <View>
           <Text className="text-zinc-text text-2xl font-bold">Rekomendasi</Text>
           <View className="h-1 w-8 bg-primary-600 rounded-full mt-1" />
         </View>
-        <Text className="text-primary-400 text-lg font-semibold">Semua</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("All", { type: "recommendation" })}
+          className="pb-1"
+        >
+          <Text className="text-primary-400 text-lg font-semibold">Semua</Text>
+        </TouchableOpacity>
       </View>
 
       {error ? (
-        <Text className="text-zinc-text">Terjadi kesalahan: {error.message}</Text>
+        <Text className="text-zinc-text">
+          Terjadi kesalahan: {error.message}
+        </Text>
       ) : loading ? (
         <FlatList
           data={Array.from({ length: 9 })}
@@ -39,7 +54,9 @@ const RecommendationSection = ({ navigation }) => {
             <ManhwaCard
               item={item}
               isNew={false}
-              onPress={() => navigation.navigate('Detail', { id: item.manga_id })}
+              onPress={() =>
+                navigation.navigate("Detail", { id: item.manga_id })
+              }
             />
           )}
           keyExtractor={(item, index) => `${item.manga_id}-${index}`}
@@ -52,6 +69,6 @@ const RecommendationSection = ({ navigation }) => {
       )}
     </View>
   );
-}
+};
 
 export default RecommendationSection;

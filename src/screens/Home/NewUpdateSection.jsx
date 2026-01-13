@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ManhwaCard from '../../components/ManhwaCard';
 import ManhwaCardSkeleton from '../../components/ManhwaCardSkeleton';
@@ -23,7 +23,9 @@ const NewUpdateSection = ({ navigation }) => {
                     <Text className="text-white text-2xl font-bold tracking-tighter">Update Terbaru</Text>
                     <View className="h-1 w-8 bg-primary-600 rounded-full mt-1" />
                 </View>
+                <TouchableOpacity onPress={() => navigation.navigate('All', { type:  'new-update'})} className="pb-1">
                 <Text className="text-primary-400 text-lg font-semibold">Semua</Text>
+                </TouchableOpacity>
             </View>
 
             <View className="flex-row gap-2 mb-4">
@@ -45,7 +47,7 @@ const NewUpdateSection = ({ navigation }) => {
                 <Text className="text-zinc-text">Terjadi kesalahan: {error.message}</Text>
             ) : loading ? (
                 <FlatList
-                    data={Array.from({ length: 9 })}
+                    data={newUpdates || Array.from({ length: 9 })}
                     renderItem={() => (
                         <ManhwaCardSkeleton />
                     )}
@@ -56,7 +58,7 @@ const NewUpdateSection = ({ navigation }) => {
                 />
             ) : (
                 <FlatList
-                    data={newUpdates}
+                    data={newUpdates?.slice(0, 15)}
                     renderItem={({ item }) => (
                         <ManhwaCard
                             item={item}

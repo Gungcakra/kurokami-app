@@ -6,7 +6,6 @@ const HeaderSection = ({ navigation }) => {
     const insets = useSafeAreaInsets();
 
     return (
-        /* Menggunakan position absolute agar melayang di atas ScrollView */
         <View 
             style={{ paddingTop: insets.top + 10 }}
             className="absolute top-0 left-0 right-0 z-50 flex-row justify-between items-center px-6 pb-4 bg-[#121215] backdrop-blur-md border-b border-white/5"

@@ -1,15 +1,7 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  FlatList,
-} from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
 import * as Animatable from "react-native-animatable";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import ChapterListSectionSkeleton from "./ChapterListSectionSkeleton";
 
 export const ChapterListSection = ({
   item,
@@ -45,42 +37,47 @@ export const ChapterListSection = ({
       isNew,
     };
   };
+
   return (
-    <Animatable.View animation="fadeInUp" className="px-6 bg-zinc-bg pb-40">
-     <View className="flex-row items-center justify-between mb-8">
-             <View>
-               <Text className="text-white text-2xl font-black tracking-tighter italic">
-                 Daftar Chapter
-               </Text>
-               <Text className="text-zinc-500 text-[10px] font-bold uppercase tracking-[2px]">
-                 Halaman {page} dari {totalPage}
-               </Text>
-             </View>
-             <TouchableOpacity
-               onPress={() => setOrder(order === "desc" ? "asc" : "desc")}
-               className="flex-row items-center bg-zinc-soft px-4 py-2.5 rounded-2xl border border-zinc-border"
-             >
-               <Ionicons name="swap-vertical" size={16} color="#EF4444" />
-               <Text className="text-white font-bold ml-2 text-xs uppercase">
-                 {order === "desc" ? "Terbaru" : "Terlama"}
-               </Text>
-             </TouchableOpacity>
-           </View>
-     
-           <View className="flex-row items-center bg-zinc-soft/50 rounded-[24px] px-5 border border-zinc-border/50 mb-8 h-14">
-             <Ionicons name="search-outline" size={20} color="#71717A" />
-             <TextInput
-               placeholder="Lompat ke chapter..."
-               placeholderTextColor="#52525B"
-               className="flex-1 ml-3 text-white font-bold text-base"
-               keyboardType="numeric"
-               value={search}
-               onChangeText={(txt) => {
-                 setSearch(txt);
-                 setPage(1);
-               }}
-             />
-           </View>
+    <Animatable.View
+      animation="fadeInUp"
+      delay={400}
+      className="px-6 bg-zinc-bg pb-48"
+    >
+      <View className="flex-row items-center justify-between mb-8">
+        <View>
+          <Text className="text-white text-2xl font-black tracking-tighter italic">
+            Daftar Chapter
+          </Text>
+          <Text className="text-zinc-500 text-[10px] font-bold uppercase tracking-[2px]">
+            Halaman {page} dari {totalPage}
+          </Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => setOrder(order === "desc" ? "asc" : "desc")}
+          className="flex-row items-center bg-zinc-soft px-4 py-2.5 rounded-2xl border border-zinc-border"
+        >
+          <Ionicons name="swap-vertical" size={16} color="#EF4444" />
+          <Text className="text-white font-bold ml-2 text-xs uppercase">
+            {order === "desc" ? "Terbaru" : "Terlama"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View className="flex-row items-center bg-zinc-soft/50 rounded-[24px] px-5 border border-zinc-border/50 mb-8 h-14">
+        <Ionicons name="search-outline" size={20} color="#71717A" />
+        <TextInput
+          placeholder="Lompat ke chapter..."
+          placeholderTextColor="#52525B"
+          className="flex-1 ml-3 text-white font-bold text-base"
+          keyboardType="numeric"
+          value={search}
+          onChangeText={(txt) => {
+            setSearch(txt);
+            setPage(1);
+          }}
+        />
+      </View>
 
       {loading ? (
         <View className="py-20 items-center">
@@ -100,8 +97,8 @@ export const ChapterListSection = ({
           return (
             <TouchableOpacity
               key={chapter.id || index}
+              
               activeOpacity={0.8}
-              onPress={() => navigation.navigate("Read", {chapterId: chapter.chapter_id})}
               className="bg-zinc-soft/40 p-4 rounded-[28px] border border-zinc-border/30 flex-row items-center mb-4"
             >
               <View>
@@ -147,58 +144,54 @@ export const ChapterListSection = ({
         })
       )}
 
-      {/* PAGINATION NUMBERS */}
-      <View className="flex-row justify-center items-center mt-6 gap-2">
+      {/* PAGINATION */}
+      <View className="flex-row justify-center items-center mt-10 gap-2">
         <TouchableOpacity
           disabled={page === 1}
           onPress={() => setPage(page - 1)}
-          className={`w-10 h-10 rounded-xl items-center justify-center ${
-            page === 1
-              ? "bg-zinc-soft/30"
-              : "bg-zinc-soft border border-zinc-border"
+          className={`w-12 h-12 rounded-2xl items-center justify-center ${
+            page === 1 ? "opacity-20" : "bg-zinc-soft border border-zinc-border"
           }`}
         >
-          <Ionicons
-            name="chevron-back"
-            size={20}
-            color={page === 1 ? "#3F3F46" : "white"}
-          />
+          <Ionicons name="chevron-back" size={20} color="white" />
         </TouchableOpacity>
 
-        {/* Logika simpel menampilkan halaman (misal: hal 1, 2, 3) */}
         {[...Array(totalPage)].map((_, i) => {
           const p = i + 1;
-          // Hanya tampilkan halaman sekitar current page agar tidak kepanjangan
           if (p === 1 || p === totalPage || (p >= page - 1 && p <= page + 1)) {
             return (
               <TouchableOpacity
                 key={p}
                 onPress={() => setPage(p)}
-                className={`w-10 h-10 rounded-xl items-center justify-center ${
-                  page === p ? "bg-red-500" : "bg-zinc-soft"
+                className={`w-12 h-12 rounded-2xl items-center justify-center ${
+                  page === p
+                    ? "bg-red-600 shadow-lg shadow-red-600/40"
+                    : "bg-zinc-soft border border-zinc-border/50"
                 }`}
               >
-                <Text className="text-white font-bold">{p}</Text>
+                <Text className="text-white font-black text-base">{p}</Text>
               </TouchableOpacity>
             );
           }
+          if (p === page - 2 || p === page + 2)
+            return (
+              <Text key={p} className="text-zinc-600 font-bold px-1">
+                ...
+              </Text>
+            );
           return null;
         })}
 
         <TouchableOpacity
           disabled={page === totalPage}
           onPress={() => setPage(page + 1)}
-          className={`w-10 h-10 rounded-xl items-center justify-center ${
+          className={`w-12 h-12 rounded-2xl items-center justify-center ${
             page === totalPage
-              ? "bg-zinc-soft/30"
+              ? "opacity-20"
               : "bg-zinc-soft border border-zinc-border"
           }`}
         >
-          <Ionicons
-            name="chevron-forward"
-            size={20}
-            color={page === totalPage ? "#3F3F46" : "white"}
-          />
+          <Ionicons name="chevron-forward" size={20} color="white" />
         </TouchableOpacity>
       </View>
     </Animatable.View>
