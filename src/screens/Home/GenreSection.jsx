@@ -21,8 +21,18 @@ const GenreSection = () => {
         navigation.getParent()?.setOptions({ swipeEnabled: true })
       }
     >
-      <Text className="text-zinc-text text-2xl font-bold">Genres</Text>
-      <ScrollView horizontal>
+      <View>
+        <View className="flex-row items-center mb-1">
+          <View className="h-[2px] w-4 bg-red-600 mr-2" />
+          <Text className="text-red-600 text-[10px] font-black tracking-[2px] uppercase">
+            Explore
+          </Text>
+        </View>
+        <Text className="text-white text-3xl font-black tracking-tighter">
+          Genre
+        </Text>
+      </View>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View>
           {loading ? (
             <View className="flex-row flex-wrap mt-4">

@@ -8,8 +8,9 @@ const RecommendationSection = ({ navigation }) => {
   const { recommendations, loading, error } = useRecommendations();
 
   return (
-    <View className="mt-8"
-    onTouchStart={() =>
+    <View
+      className="mt-8"
+      onTouchStart={() =>
         navigation.getParent()?.setOptions({ swipeEnabled: false })
       }
       onTouchEnd={() =>
@@ -21,8 +22,15 @@ const RecommendationSection = ({ navigation }) => {
     >
       <View className="flex-row justify-between items-end mb-4">
         <View>
-          <Text className="text-zinc-text text-2xl font-bold">Rekomendasi</Text>
-          <View className="h-1 w-8 bg-primary-600 rounded-full mt-1" />
+          <View className="flex-row items-center mb-1">
+            <View className="h-[2px] w-4 bg-red-600 mr-2" />
+            <Text className="text-red-600 text-[10px] font-black tracking-[2px] uppercase">
+              For Your
+            </Text>
+          </View>
+          <Text className="text-white text-3xl font-black tracking-tighter">
+            Rekomendasi
+          </Text>
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate("All", { type: "recommendation" })}

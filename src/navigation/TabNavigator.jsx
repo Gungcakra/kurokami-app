@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable, Animated, Dimensions } from 'react-native';
-
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
@@ -18,12 +17,12 @@ const TAB_COUNT = 5;
 const SLIDER_WIDTH = SCREEN_WIDTH / TAB_COUNT;
 
 const TabButton = ({ index, activeIndexAnim, iconName, label }) => {
-  const activeColor = '#EF4444';
-  const inactiveColor = '#71717A';
+  const activeColor = '#EF4444'; // Red-600
+  const inactiveColor = '#3F3F46'; // Zinc-700
 
   const translateYIcon = activeIndexAnim.interpolate({
     inputRange: [index - 1, index, index + 1],
-    outputRange: [0, -12, 0],
+    outputRange: [0, -10, 0],
     extrapolate: 'clamp',
   });
 
@@ -59,7 +58,7 @@ const TabButton = ({ index, activeIndexAnim, iconName, label }) => {
           }
         ]}
       >
-        <Text numberOfLines={1} adjustsFontSizeToFit style={[styles.label, { color: activeColor }]}>
+        <Text numberOfLines={1} style={[styles.label, { color: activeColor }]}>
           {label}
         </Text>
       </Animated.View>
@@ -80,7 +79,7 @@ export default function TabNavigator() {
   ];
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#121215' }}>
+    <View style={{ flex: 1, backgroundColor: '#0F0F12' }}>
       <Tab.Navigator
         tabBarPosition="bottom" 
         screenOptions={{
@@ -88,12 +87,9 @@ export default function TabNavigator() {
           animationEnabled: true,
         }}
         tabBar={({ state, descriptors, navigation, position }) => {
-          useEffect(() => {
-            positionAnim.setValue(state.index);
-          }, [state.index]);
-
           return (
-            <View style={[styles.tabBar, { height: 65 + insets.bottom, paddingBottom: insets.bottom }]}>
+            <View style={[styles.tabBar, { height: 60 + insets.bottom, paddingBottom: insets.bottom }]}>
+              {/* Background Slider Modern */}
               <Animated.View 
                 style={[
                   styles.slider, 
@@ -105,7 +101,7 @@ export default function TabNavigator() {
                             outputRange: [0, (TAB_COUNT - 1) * SLIDER_WIDTH]
                         }) 
                     }],
-                    bottom: insets.bottom + 10,
+                    bottom: insets.bottom + 8,
                   }
                 ]} 
               >
@@ -113,7 +109,6 @@ export default function TabNavigator() {
               </Animated.View>
 
               {state.routes.map((route, index) => {
-                const { options } = descriptors[route.key];
                 const isFocused = state.index === index;
 
                 const onPress = () => {
@@ -154,11 +149,11 @@ export default function TabNavigator() {
 const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
-    backgroundColor: '#121215',
+    backgroundColor: '#0F0F12', // Samakan dengan bg semua screen
     position: 'absolute',
     bottom: 0,
     borderTopWidth: 1,
-    borderTopColor: '#27272A',
+    borderTopColor: '#1A1A1F', // Zinc yang sangat gelap
     width: '100%',
     elevation: 0,
   },
@@ -166,38 +161,39 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 10,
   },
   buttonContent: {
     alignItems: 'center',
     justifyContent: 'center',
     width: SLIDER_WIDTH,
-    height: 65,
+    height: 60,
   },
   labelContainer: {
     position: 'absolute',
-    bottom: 15,
+    bottom: 12,
     width: '100%',
     alignItems: 'center',
   },
   label: {
-    fontSize: 8.5, 
+    fontSize: 9, 
     fontWeight: '900',
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: 1,
   },
   slider: {
     position: 'absolute',
-    height: 50, 
+    height: 44, 
     zIndex: 0, 
     justifyContent: 'center',
     alignItems: 'center',
   },
   sliderInner: {
-    width: '85%',
+    width: '75%',
     height: '100%',
-    backgroundColor: 'rgba(239, 68, 68, 0.12)', 
-    borderRadius: 14,
+    backgroundColor: 'rgba(239, 68, 68, 0.08)', // Red glow tipis
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(239, 68, 68, 0.2)',
+    borderColor: 'rgba(239, 68, 68, 0.15)',
   }
 });
