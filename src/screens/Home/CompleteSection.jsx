@@ -3,6 +3,7 @@ import { useComplete } from "../../hooks/home";
 import { FlatList } from "react-native";
 import ManhwaCard from "../../components/ManhwaCard";
 import ManhwaCardSkeleton from "../../components/ManhwaCardSkeleton";
+import { ScrollView } from "react-native-gesture-handler";
 
 const CompleteSection = ({ navigation }) => {
   const { completedManhwa, loading, error } = useComplete();
@@ -37,35 +38,24 @@ const CompleteSection = ({ navigation }) => {
           Terjadi kesalahan: {error.message}
         </Text>
       ) : loading ? (
-        <FlatList
-          data={Array.from({ length: 9 })}
-          renderItem={() => <ManhwaCardSkeleton />}
-          keyExtractor={(_, index) => `skeleton-${index}`}
-          horizontal
-          scrollEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={false}
-          decelerationRate={0.9}
-        />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {Array.from({ length: 9 }).map((_, index) => (
+            <ManhwaCardSkeleton key={`skeleton-${index}`} />
+          ))}
+        </ScrollView>
       ) : (
-        <FlatList
-          data={completedManhwa?.slice(0, 15)}
-          renderItem={({ item }) => (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {completedManhwa?.slice(0, 15).map((item) => (
             <ManhwaCard
+              key={item.manga_id}
               item={item}
               isNew={false}
               onPress={() =>
                 navigation.navigate("Detail", { id: item.manga_id })
               }
             />
-          )}
-          keyExtractor={(item, index) => `${item.manga_id}-${index}`}
-          horizontal
-          scrollEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={false}
-          decelerationRate={0.9}
-        />
+          ))}
+        </ScrollView>
       )}
     </View>
   );

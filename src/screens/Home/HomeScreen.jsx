@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }) => {
         className="px-4 mt-20"
         scrollEventThrottle={16}
         nestedScrollEnabled={true}
-        removeClippedSubviews={true} // Optimasi performa memori
+        removeClippedSubviews={true}
         contentContainerStyle={{
           paddingBottom: Platform.OS === 'android' ? 140 : 120,
         }}

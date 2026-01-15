@@ -97,7 +97,7 @@ export const ChapterListSection = ({
           <Text className="text-zinc-500 mt-4 font-bold">Memuat list...</Text>
         </View>
       ) : (
-        item.map((chapter, index) => {
+        item?.map((chapter, index) => {
           const { text, isNew } = getRelativeTime(chapter.release_date);
 
           return (
