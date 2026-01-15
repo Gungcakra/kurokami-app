@@ -1,8 +1,9 @@
 import { Text, TouchableOpacity, View } from "react-native";
-import { useRecommendations } from "../../hooks/home";
+import { useRecommendations, useTop } from "../../hooks/home";
 import { FlatList } from "react-native";
 import ManhwaCard from "../../components/ManhwaCard";
 import ManhwaCardSkeleton from "../../components/ManhwaCardSkeleton";
+import { ScrollView } from "react-native-gesture-handler";
 
 const RecommendationSection = ({ navigation }) => {
   const { recommendations, loading, error } = useRecommendations();
@@ -25,7 +26,7 @@ const RecommendationSection = ({ navigation }) => {
           <View className="flex-row items-center mb-1">
             <View className="h-[2px] w-4 bg-red-600 mr-2" />
             <Text className="text-red-600 text-[10px] font-black tracking-[2px] uppercase">
-              For Your
+              For You
             </Text>
           </View>
           <Text className="text-white text-3xl font-black tracking-tighter">
@@ -33,7 +34,7 @@ const RecommendationSection = ({ navigation }) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("All", { type: "recommendation" })}
+          onPress={() => navigation.navigate("All", { type: "recommendations" })}
           className="pb-1"
         >
           <Text className="text-primary-400 text-lg font-semibold">Semua</Text>
@@ -45,35 +46,24 @@ const RecommendationSection = ({ navigation }) => {
           Terjadi kesalahan: {error.message}
         </Text>
       ) : loading ? (
-        <FlatList
-          data={Array.from({ length: 9 })}
-          renderItem={() => <ManhwaCardSkeleton />}
-          keyExtractor={(_, index) => `skeleton-${index}`}
-          horizontal
-          scrollEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={false}
-          decelerationRate={0.9}
-        />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {Array.from({ length: 9 }).map((_, index) => (
+            <ManhwaCardSkeleton key={`skeleton-${index}`} />
+          ))}
+        </ScrollView>
       ) : (
-        <FlatList
-          data={recommendations?.slice(0, 9)}
-          renderItem={({ item }) => (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {recommendations?.slice(0, 9).map((item, index) => (
             <ManhwaCard
+              key={`${item.manga_id}-${index}`}
               item={item}
               isNew={false}
               onPress={() =>
                 navigation.navigate("Detail", { id: item.manga_id })
               }
             />
-          )}
-          keyExtractor={(item, index) => `${item.manga_id}-${index}`}
-          horizontal
-          scrollEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled={false}
-          decelerationRate={0.9}
-        />
+          ))}
+        </ScrollView>
       )}
     </View>
   );

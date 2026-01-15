@@ -39,12 +39,7 @@ const PopularSection = memo(({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 8, gap: 12 }}
-        decelerationRate="fast"
-      >
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {loading ? (
           <PopularSkeleton />
         ) : (
