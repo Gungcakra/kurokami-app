@@ -18,7 +18,7 @@ const SLIDER_WIDTH = SCREEN_WIDTH / TAB_COUNT;
 
 const TabButton = ({ index, activeIndexAnim, iconName, label }) => {
   const activeColor = '#EF4444'; // Red-600
-  const inactiveColor = '#3F3F46'; // Zinc-700
+  const inactiveColor = '#BBBBBB'; // Zinc-700
 
   const translateYIcon = activeIndexAnim.interpolate({
     inputRange: [index - 1, index, index + 1],
