@@ -14,11 +14,11 @@ const WelcomeScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('Main');
-    }, 2500); // Sedikit lebih lama agar animasi terasa elegan
+    }, 2500); 
     return () => clearTimeout(timer);
   }, []);
 
-  // Animasi nafas (pulse) untuk logo
+  
   const pulseStyle = useAnimatedStyle(() => ({
     opacity: withRepeat(
       withSequence(
@@ -34,16 +34,14 @@ const WelcomeScreen = ({ navigation }) => {
     <View className="flex-1 bg-[#0F0F12] items-center justify-center">
       <StatusBar barStyle="light-content" backgroundColor="#0F0F12" />
       
-      {/* Container Logo dengan Efek Glow */}
       <Animated.View 
         entering={ZoomIn.duration(1000).springify()}
         style={[pulseStyle]}
         className="relative"
       >
-        {/* Glow Effect di belakang logo */}
-        <View className="absolute inset-0 bg-red-600/20 blur-3xl rounded-full scale-150" />
+        <View className="absolute inset-0 scale-150" />
         
-        <View className="w-40 h-40 bg-zinc-900/50 rounded-[40px] items-center justify-center border border-white/5 shadow-2xl overflow-hidden">
+        <View className="w-40 h-40  items-center justify-center border shadow-2xl overflow-hidden">
           <Image 
             source={require('../../assets/logo.png')} 
             className="w-full h-full"
@@ -52,11 +50,10 @@ const WelcomeScreen = ({ navigation }) => {
         </View>
       </Animated.View>
 
-      {/* Text Section */}
       <View className="items-center mt-10">
         <Animated.View entering={FadeInUp.delay(500).duration(1000)}>
           <Text className="text-white text-4xl font-black tracking-[8px] italic">
-            KURO<Text className="text-red-600">KAMI</Text>
+            <Text className="text-white">KUROKAMI</Text>
           </Text>
         </Animated.View>
         
@@ -64,14 +61,13 @@ const WelcomeScreen = ({ navigation }) => {
           <View className="flex-row items-center mt-2">
             <View className="h-[1px] w-8 bg-zinc-800" />
             <Text className="text-zinc-600 mx-3 text-[10px] font-black tracking-[4px] uppercase">
-              Manga Engine
+              Manhwa Reader
             </Text>
             <View className="h-[1px] w-8 bg-zinc-800" />
           </View>
         </Animated.View>
       </View>
 
-      {/* Footer / Version */}
       <Animated.View 
         entering={FadeInDown.delay(1200)}
         className="absolute bottom-12"
