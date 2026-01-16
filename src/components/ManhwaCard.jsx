@@ -65,9 +65,7 @@ const ManhwaCard = memo(
             </View>
           )}
 
-          <View className="absolute top-2 right-2 z-20 ">
-            {renderFlag()}
-          </View>
+          <View className="absolute top-2 right-2 z-20 ">{renderFlag()}</View>
 
           <View className="relative">
             <Image
@@ -94,11 +92,13 @@ const ManhwaCard = memo(
             </Text>
 
             <View className="flex-row items-center mt-1.5 justify-between">
-              <View className="bg-zinc-900 px-1.5 py-0.5 rounded-md border border-white/5">
-                <Text className="text-red-500 text-xs font-black italic">
-                  CH. {item.latest_chapter_number}
-                </Text>
-              </View>
+              {item.latest_chapter_number && (
+                <View className="bg-zinc-900 px-1.5 py-0.5 rounded-md border border-white/5">
+                  <Text className="text-red-500 text-xs font-black italic">
+                    CH. {item.latest_chapter_number}
+                  </Text>
+                </View>
+              )}
 
               {item.view_count && (
                 <View className="flex-row items-center">
