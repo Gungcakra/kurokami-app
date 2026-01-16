@@ -54,7 +54,7 @@ export const DetailSection = ({ item, insets, navigation }) => {
           className="absolute top-0 left-0 right-0 px-6 flex-row justify-between z-20"
         >
           <TouchableOpacity
-            onPress={() => navigation.navigate("Main")}
+            onPress={() => navigation.goBack()}
             className="bg-black/40 p-3 rounded-full border border-white/10"
           >
             <Ionicons name="chevron-back" size={24} color="white" />

@@ -1,24 +1,49 @@
-import React, { useEffect } from 'react';
-import { View, Text, Image, StatusBar } from 'react-native';
-import Animated, { 
-  FadeInUp, 
-  FadeInDown, 
-  ZoomIn, 
-  useAnimatedStyle, 
-  withRepeat, 
-  withTiming, 
-  withSequence 
-} from 'react-native-reanimated';
-
+import React, { useEffect, useState } from "react";
+import { View, Text, Image, StatusBar } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
+import Animated, {
+  FadeInUp,
+  FadeInDown,
+  ZoomIn,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  withSequence,
+} from "react-native-reanimated";
+import Alert from "../components/Alert";
+import Constants from 'expo-constants';
 const WelcomeScreen = ({ navigation }) => {
+  // 1. Deklarasi State harus di level paling atas
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    title: "",
+    message: "",
+    type: "",
+  });
+  const version = Constants.expoConfig?.version || '1.0.0';
+  const checkConnectionAndNavigate = async () => {
+    // Tunggu animasi splash screen selesai
+    await new Promise((resolve) => setTimeout(resolve, 2500));
+
+    const state = await NetInfo.fetch();
+    
+    // Cek koneksi
+    if (state.isConnected && state.isInternetReachable !== false) {
+      navigation.replace("Main");
+    } else {
+      setShowAlert({
+        show: true,
+        title: "Koneksi Terputus",
+        message: "Aplikasi membutuhkan internet. Periksa koneksi Anda dan coba lagi.",
+        type: "error",
+      });
+    }
+  };
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.replace('Main');
-    }, 2500); 
-    return () => clearTimeout(timer);
+    checkConnectionAndNavigate();
   }, []);
 
-  
   const pulseStyle = useAnimatedStyle(() => ({
     opacity: withRepeat(
       withSequence(
@@ -33,17 +58,15 @@ const WelcomeScreen = ({ navigation }) => {
   return (
     <View className="flex-1 bg-[#0F0F12] items-center justify-center">
       <StatusBar barStyle="light-content" backgroundColor="#0F0F12" />
-      
-      <Animated.View 
+
+      <Animated.View
         entering={ZoomIn.duration(1000).springify()}
         style={[pulseStyle]}
         className="relative"
       >
-        <View className="absolute inset-0 scale-150" />
-        
-        <View className="w-40 h-40  items-center justify-center border shadow-2xl overflow-hidden">
-          <Image 
-            source={require('../../assets/logo.png')} 
+        <View className="w-40 h-40 items-center justify-center overflow-hidden">
+          <Image
+            source={require("../../assets/logo.png")}
             className="w-full h-full"
             resizeMode="contain"
           />
@@ -52,11 +75,11 @@ const WelcomeScreen = ({ navigation }) => {
 
       <View className="items-center mt-10">
         <Animated.View entering={FadeInUp.delay(500).duration(1000)}>
-          <Text className="text-white text-4xl font-black tracking-[8px] italic">
-            <Text className="text-white">KUROKAMI</Text>
+          <Text className="text-white text-4xl font-black tracking-[8px] italic uppercase">
+            KUROKAMI
           </Text>
         </Animated.View>
-        
+
         <Animated.View entering={FadeInDown.delay(800).duration(1000)}>
           <View className="flex-row items-center mt-2">
             <View className="h-[1px] w-8 bg-zinc-800" />
@@ -68,14 +91,20 @@ const WelcomeScreen = ({ navigation }) => {
         </Animated.View>
       </View>
 
-      <Animated.View 
+      <Animated.View
         entering={FadeInDown.delay(1200)}
         className="absolute bottom-12"
       >
-        <Text className="text-zinc-800 text-[10px] font-bold tracking-widest">
-          V 1.0.0
+        <Text className="text-white text-[10px] font-bold tracking-widest">
+          V {version}
         </Text>
       </Animated.View>
+
+      <Alert 
+        showAlert={showAlert} 
+        setShowAlert={setShowAlert} 
+        onConfirm={() => checkConnectionAndNavigate()} 
+      />
     </View>
   );
 };

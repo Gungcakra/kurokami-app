@@ -1,4 +1,4 @@
-import React, { useState, memo, useCallback, useRef } from "react";
+import React, { useState, memo, useCallback, useRef, useEffect } from "react";
 import {
   View,
   FlatList,
@@ -9,7 +9,7 @@ import {
   Pressable,
   StyleSheet,
   StatusBar,
-  Modal, // 1. Import Modal
+  Modal,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Image } from "expo-image";
@@ -17,7 +17,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Animatable from "react-native-animatable";
 import { useChapterDetail } from "../../hooks/chapter";
 import { useChapterList, useManhwaDetail } from "../../hooks/detail";
-import { ChapterListSheet } from "../../components/ChapterListSheet";
+import { ChapterListSection } from "../Detail/ChapterListSection";
+import { saveToStorage } from "../../utils/storageHelper";
 
 const { width: windowWidth } = Dimensions.get("window");
 
@@ -32,15 +33,13 @@ const ChapterListModal = memo(
         transparent
         statusBarTranslucent
       >
-        {/* Overlay hitam transparan di bagian atas */}
         <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.7)" }}>
           <Pressable style={{ flex: 1 }} onPress={onClose} />
 
-          {/* Konten Modal */}
           <View
             style={{
               height: "85%",
-              backgroundColor: "#0F0F12", 
+              backgroundColor: "#0F0F12",
               borderTopLeftRadius: 40,
               borderTopRightRadius: 40,
               borderTopWidth: 1,
@@ -50,7 +49,6 @@ const ChapterListModal = memo(
               paddingBottom: insets.bottom > 0 ? insets.bottom : 20,
             }}
           >
-            {/* Header Internal Modal */}
             <View className="flex-row justify-between items-center mb-6">
               <Text className="text-white text-2xl font-black tracking-tighter">
                 Chapters
@@ -63,12 +61,11 @@ const ChapterListModal = memo(
               </TouchableOpacity>
             </View>
 
-            {/* Gunakan ChapterListSheet di sini */}
             <View style={{ flex: 1 }}>
-              <ChapterListSheet
+              <ChapterListSection
                 item={chapterList}
                 navigation={{ navigate: () => {} }}
-                onSelectChapter={onSelectChapter} 
+                onSelectChapter={onSelectChapter}
                 onClose={onClose}
                 order={chapterList.order}
                 setOrder={chapterList.setOrder}
@@ -130,9 +127,17 @@ export default function ReadScreen({ navigation, route }) {
     useChapterDetail(currentChapterId);
   const { manhwaDetail } = useManhwaDetail(chapterDetail?.manga_id);
   const [showControls, setShowControls] = useState(true);
-  const chapterList = useChapterList(
-    chapterDetail?.manga_id
-  );
+  const chapterList = useChapterList(chapterDetail?.manga_id);
+
+  useEffect(() => {
+    if (chapterDetail && manhwaDetail) {
+      saveToStorage({
+        chapter: chapterDetail,
+        manhwaTitle: manhwaDetail.title || "Manhwa",
+      });
+    }
+  }, [chapterDetail, manhwaDetail]);
+
   const toggleControls = useCallback(
     () => setShowControls((prev) => !prev),
     []
@@ -186,7 +191,6 @@ export default function ReadScreen({ navigation, route }) {
         onScrollBeginDrag={() => showControls && setShowControls(false)}
       />
 
-      {/* MODAL LIST CHAPTER */}
       <ChapterListModal
         visible={showChapterListModal}
         onClose={() => setShowChapterListModal(false)}
@@ -195,7 +199,6 @@ export default function ReadScreen({ navigation, route }) {
         onSelectChapter={handleChapterChange}
       />
 
-      {/* TOP CONTROLS */}
       {showControls && (
         <Animatable.View
           animation="fadeInDown"
@@ -221,7 +224,6 @@ export default function ReadScreen({ navigation, route }) {
         </Animatable.View>
       )}
 
-      {/* BOTTOM CONTROLS */}
       {showControls && (
         <Animatable.View
           animation="fadeInUp"
@@ -241,7 +243,10 @@ export default function ReadScreen({ navigation, route }) {
 
           <View style={styles.centerInfo}>
             <TouchableOpacity onPress={() => setShowChapterListModal(true)}>
-              <Text style={styles.infoText} className="text-center bg-zinc-soft px-4 py-2 rounded-full">
+              <Text
+                style={styles.infoText}
+                className="text-center bg-zinc-soft px-4 py-2 rounded-full"
+              >
                 Chapter {chapterDetail?.chapter_number}
               </Text>
             </TouchableOpacity>

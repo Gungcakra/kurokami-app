@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   View,
   Text,
   TouchableOpacity,
-  FlatList,
   BackHandler,
+  Modal,
 } from "react-native";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -32,6 +32,8 @@ import { ScrollView } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Alert from "../../components/Alert";
 export default function DetailScreen({ route }) {
   const { id } = route.params;
 
@@ -42,7 +44,12 @@ export default function DetailScreen({ route }) {
   const { manhwaDetail, loading } = useManhwaDetail(id);
 
   const chapterData = useChapterList(id);
-
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    title: "",
+    message: "",
+    type: "",
+  });
   useEffect(() => {
     const backAction = () => {
       navigation.navigate("Main");
@@ -67,6 +74,109 @@ export default function DetailScreen({ route }) {
         chapterId: manhwaDetail.latest_chapter_id,
       });
     }
+  };
+
+  const saveToBookmarks = async () => {
+    try {
+      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+      const dataToSave = {
+        id: manhwaDetail?.manga_id,
+        title: manhwaDetail.title,
+        cover_image_url: manhwaDetail.cover_image_url,
+        cover_portrait_url: manhwaDetail.cover_portrait_url,
+        manga_id: manhwaDetail.manga_id,
+        country_id: manhwaDetail.country_id,
+        
+        bookmarkedAt: new Date().toISOString(),
+      };
+
+      const existingBookmarks = await AsyncStorage.getItem("@bookmarks");
+      let bookmarks = existingBookmarks ? JSON.parse(existingBookmarks) : [];
+
+      const isExist = bookmarks.find((item) => item.id === dataToSave.id);
+
+      if (isExist) {
+        setShowAlert({
+          show: true,
+          title: "Info",
+          message: "Manhwa sudah ada di bookmark",
+          type: "info",
+        });
+        return;
+      }
+
+      bookmarks.push(dataToSave);
+
+      await AsyncStorage.setItem("@bookmarks", JSON.stringify(bookmarks));
+
+      setShowAlert({
+        show: true,
+        title: "Sukses",
+        message: "Manhwa " + manhwaDetail?.title + " berhasil disimpan ke bookmark!",
+        type: "success",
+      });
+    } catch (error) {
+      setShowAlert({
+        show: true,
+        title: "Error",
+        message: "Gagal menyimpan ke bookmark",
+        type: "error",
+      });
+      console.error("Gagal menyimpan bookmark:", error);
+    }
+  };
+
+  const unBookmark = async () => {
+    try {
+      const existingBookmarks = await AsyncStorage.getItem("@bookmarks");
+      let bookmarks = existingBookmarks ? JSON.parse(existingBookmarks) : [];
+      bookmarks = bookmarks.filter(
+        (item) => item.id !== manhwaDetail?.manga_id
+      );
+      await AsyncStorage.setItem("@bookmarks", JSON.stringify(bookmarks));
+      setShowAlert({
+        show: true,
+        title: "Sukses",
+        message: "Manhwa " + manhwaDetail?.title + " berhasil dihapus dari bookmark!",
+        type: "success",
+      });
+    } catch (error) {
+      setShowAlert({
+        show: true,
+        title: "Error",
+        message: "Gagal menghapus dari bookmark",
+        type: "error",
+      });
+      console.error("Gagal menghapus bookmark:", error);
+    }
+  };
+
+  const [isBookmarked, setIsBookmarked] = React.useState(false);
+  useEffect(() => {
+    checkIfBookmarked();
+  }, [manhwaDetail?.manga_id]);
+
+  const checkIfBookmarked = async () => {
+    try {
+      const existingBookmarks = await AsyncStorage.getItem("@bookmarks");
+      const bookmarks = existingBookmarks ? JSON.parse(existingBookmarks) : [];
+      const bookmarked = bookmarks.some(
+        (item) => item.id === manhwaDetail?.manga_id
+      );
+      setIsBookmarked(bookmarked);
+    } catch (error) {
+      console.error("Error checking bookmark:", error);
+    }
+  };
+
+  const handleBookmarkPress = async () => {
+    if (isBookmarked) {
+      await unBookmark();
+    } else {
+      await saveToBookmarks();
+    }
+    checkIfBookmarked();
   };
 
   return (
@@ -112,13 +222,17 @@ export default function DetailScreen({ route }) {
 
         <View className="flex-row gap-4 items-center bg-zinc-900/80 backdrop-blur-3xl p-3 rounded-[35px] border border-white/10">
           <TouchableOpacity
-            onPress={() =>
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-            }
+            onPress={handleBookmarkPress}
             className="bg-zinc-soft w-14 h-14 rounded-full justify-center items-center border border-zinc-border"
           >
-            <Ionicons name="bookmark-outline" size={24} color="white" />
+            <Ionicons
+              name={isBookmarked ? "bookmark" : "bookmark-outline"}
+              size={24}
+              color={isBookmarked ? "#dc2626" : "white"}
+            />
           </TouchableOpacity>
+
+         <Alert showAlert={showAlert} setShowAlert={setShowAlert} />
 
           <TouchableOpacity
             onPress={() => handlePress("read")}
