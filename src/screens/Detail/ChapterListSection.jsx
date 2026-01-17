@@ -30,6 +30,7 @@ export const ChapterListSection = ({
   isSheet = false,
 }) => {
   const [readChapters, setReadChapters] = useState([]);
+  const [loadingChapterId, setLoadingChapterId] = useState(null);
 
   useEffect(() => {
     loadReadChapters();
@@ -54,6 +55,9 @@ export const ChapterListSection = ({
   };
 
   const handlePressChapter = async (chapter) => {
+    if (loadingChapterId) return;
+    setLoadingChapterId(chapter.chapter_id);
+
     try {
       const updatedData = await saveToStorage({
         chapter: chapter,
@@ -69,6 +73,7 @@ export const ChapterListSection = ({
       }
     } catch (e) {
       console.error(e);
+      setLoadingChapterId(null);
     }
   };
 
@@ -164,13 +169,15 @@ export const ChapterListSection = ({
                     ? rc === chapter.chapter_id
                     : rc.chapterId === chapter.chapter_id
                 );
+                const isLoadingItem = loadingChapterId === chapter.chapter_id;
 
                 return (
                   <TouchableOpacity
                     key={chapter.id || chapter.chapter_id || index}
                     activeOpacity={0.8}
+                    disabled={isLoadingItem}
                     onPress={() => handlePressChapter(chapter)}
-                    style={{ opacity: isRead ? 0.6 : 1 }}
+                    style={{ opacity: isRead && !isLoadingItem ? 0.6 : 1 }}
                     className="bg-zinc-soft/40 p-4 rounded-[28px] border border-zinc-border/30 flex-row items-center mb-4"
                   >
                     <View>
@@ -211,20 +218,25 @@ export const ChapterListSection = ({
                       className={`p-2 rounded-xl ${
                         isNew ? "bg-red-500/10" : "bg-zinc-soft"
                       }`}
+                      style={{ width: 36, height: 36, alignItems: 'center', justifyContent: 'center' }}
                     >
-                      <Ionicons
-                        name={
-                          isRead
-                            ? "checkmark-circle"
-                            : isNew
-                            ? "flash"
-                            : "chevron-forward"
-                        }
-                        size={20}
-                        color={
-                          isRead ? "#52525B" : isNew ? "#EF4444" : "#3F3F46"
-                        }
-                      />
+                      {isLoadingItem ? (
+                        <ActivityIndicator size="small" color="#EF4444" />
+                      ) : (
+                        <Ionicons
+                          name={
+                            isRead
+                              ? "checkmark-circle"
+                              : isNew
+                              ? "flash"
+                              : "chevron-forward"
+                          }
+                          size={20}
+                          color={
+                            isRead ? "#52525B" : isNew ? "#EF4444" : "#3F3F46"
+                          }
+                        />
+                      )}
                     </View>
                   </TouchableOpacity>
                 );
