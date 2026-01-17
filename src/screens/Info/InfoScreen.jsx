@@ -45,7 +45,7 @@ const InfoScreen = () => {
       title: "Data & Privacy",
       description: "Keamanan library sama riwayat bacamu",
       content:
-        "Semua bookmark dan riwayat baca kamu disimpan langsung di perangkat dan udah terenkripsi. Tenang aja, kami nggak ngumpulin data pribadi kamu sembarangan, cuma buat sinkronisasi akun aja.",
+        "Semua bookmark dan riwayat baca kamu disimpan langsung di perangkat dan udah terenkripsi. Tenang aja, kami nggak ngumpulin data pribadi kamu.",
       color: "#34D399",
       bg: "bg-emerald-500/10",
     },

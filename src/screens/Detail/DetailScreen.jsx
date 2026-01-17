@@ -44,12 +44,7 @@ export default function DetailScreen({ route }) {
   const { manhwaDetail, loading } = useManhwaDetail(id);
 
   const chapterData = useChapterList(id);
-  const [showAlert, setShowAlert] = useState({
-    show: false,
-    title: "",
-    message: "",
-    type: "",
-  });
+
   useEffect(() => {
     const backAction = () => {
       navigation.navigate("Main");
@@ -209,7 +204,7 @@ export default function DetailScreen({ route }) {
         />
       </ScrollView>
 
-      <Animatable.View
+      {/* <Animatable.View
         animation="fadeInUp"
         delay={800}
         style={{ paddingBottom: insets.bottom + 20 }}
@@ -232,7 +227,6 @@ export default function DetailScreen({ route }) {
             />
           </TouchableOpacity>
 
-         <Alert showAlert={showAlert} setShowAlert={setShowAlert} />
 
           <TouchableOpacity
             onPress={() => handlePress("read")}
@@ -246,7 +240,7 @@ export default function DetailScreen({ route }) {
             <Ionicons name="rocket" size={20} color="white" />
           </TouchableOpacity>
         </View>
-      </Animatable.View>
+      </Animatable.View> */}
     </View>
   );
 }

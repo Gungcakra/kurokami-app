@@ -186,6 +186,10 @@ export const ChapterListSection = ({
                       <Image
                         source={{ uri: chapter.thumbnail_image_url }}
                         className="w-20 h-14 rounded-2xl bg-zinc-soft"
+                        resizeMethod="resize"
+                        resizeMode="cover"
+                        cachePolicy="memory-disk"
+                        progressiveRenderingEnabled={false}
                       />
                       {isNew && (
                         <View className="absolute -top-1 -left-1 bg-red-600 px-2 py-0.5 rounded-lg border-2 border-[#0F0F12]">
