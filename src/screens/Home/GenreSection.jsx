@@ -5,7 +5,7 @@ import GenreBadge from "../../components/GenreBadge";
 import GenreBadgeSkeleton from "../../components/GenreBadgeSkeleton";
 import { ScrollView } from "react-native-gesture-handler";
 
-const GenreSection = () => {
+const GenreSection = ({ navigation }) => {
   const { genres, loading, error } = useGenres();
 
   return (
@@ -47,7 +47,7 @@ const GenreSection = () => {
           ) : (
             <View className="flex-row flex-wrap mt-4">
               {genres.map((genre) => (
-                <GenreBadge key={genre.id} genre={genre.name} />
+                <GenreBadge key={genre.id} genre={genre.name} navigation={navigation} />
               ))}
             </View>
           )}

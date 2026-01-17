@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -15,12 +15,13 @@ import { FilterSheet } from "../../components/FilterSheet";
 import * as Animatable from "react-native-animatable";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function ExploreScreen({ navigation }) {
+export default function ExploreScreen({ navigation, route }) {
   const insets = useSafeAreaInsets();
   const [isFilterVisible, setFilterVisible] = useState(false);
 
   const { genres: genreList } = useGenres();
-  const { data, loading, loadingMore, filters, updateFilter, loadMore } = useExplore();
+  const { data, loading, loadingMore, filters, updateFilter, loadMore } =
+    useExplore();
 
   const formats = ["manhwa", "manga", "manhua", "all"];
   const statuses = [
@@ -28,6 +29,16 @@ export default function ExploreScreen({ navigation }) {
     { label: "Completed", value: "completed" },
     { label: "Hiatus", value: "hiatus" },
   ];
+
+  
+  useEffect(() => {
+    const genreFromNavigation = route.params?.genre;
+    if (genreFromNavigation) {
+      updateFilter("genres", [genreFromNavigation]);
+
+      navigation.setParams({ genre: undefined });
+    }
+  }, [route.params?.genre]);
 
   return (
     <View className="flex-1 bg-[#0F0F12]">
@@ -40,9 +51,10 @@ export default function ExploreScreen({ navigation }) {
               Discovery
             </Text>
           </View>
-          
+
           <Text className="text-white text-5xl font-black tracking-tighter leading-[48px] mb-6">
-            Explore{"\n"}<Text className="text-zinc-700">Manhwa.</Text>
+            Explore{"\n"}
+            <Text className="text-zinc-700">Manhwa.</Text>
           </Text>
 
           {/* SEARCH BAR & FILTER BUTTON */}
@@ -72,7 +84,7 @@ export default function ExploreScreen({ navigation }) {
               {/* Indicator Badge Modern */}
               {(filters.genres.length > 0 || filters.status) && (
                 <View className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full items-center justify-center border-2 border-red-600">
-                   <View className="w-1.5 h-1.5 bg-red-600 rounded-full" />
+                  <View className="w-1.5 h-1.5 bg-red-600 rounded-full" />
                 </View>
               )}
             </TouchableOpacity>
@@ -91,14 +103,16 @@ export default function ExploreScreen({ navigation }) {
           paddingHorizontal: 20,
         }}
         renderItem={({ item, index }) => (
-          <Animatable.View 
-            animation="fadeInUp" 
-            delay={index % 12 * 50} // Staggered animation hanya untuk yang terlihat
+          <Animatable.View
+            animation="fadeInUp"
+            delay={(index % 12) * 50} // Staggered animation hanya untuk yang terlihat
             style={{ width: "33.3%", padding: 6 }}
           >
             <ManhwaCard
               item={item}
-              onPress={() => navigation.navigate("Detail", { id: item.manga_id })}
+              onPress={() =>
+                navigation.navigate("Detail", { id: item.manga_id })
+              }
             />
           </Animatable.View>
         )}
@@ -115,7 +129,10 @@ export default function ExploreScreen({ navigation }) {
         }
         ListEmptyComponent={
           !loading && (
-            <Animatable.View animation="fadeIn" className="mt-20 items-center px-12">
+            <Animatable.View
+              animation="fadeIn"
+              className="mt-20 items-center px-12"
+            >
               <View className="bg-zinc-900/50 p-8 rounded-full mb-6">
                 <Ionicons name="search-outline" size={40} color="#3F3F46" />
               </View>
@@ -142,8 +159,14 @@ export default function ExploreScreen({ navigation }) {
 
       {/* BOTTOM GRADIENT MASK */}
       <LinearGradient
-        colors={['transparent', '#0F0F12']}
-        style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 100 }}
+        colors={["transparent", "#0F0F12"]}
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 100,
+        }}
         pointerEvents="none"
       />
 

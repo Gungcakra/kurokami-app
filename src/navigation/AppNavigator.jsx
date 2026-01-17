@@ -29,7 +29,7 @@ export default function AppNavigator() {
         name="Search"
         component={SearchScreen}
         options={{
-          animation: "slide_from_bottom", // Animasi khusus untuk Search Screen
+          animation: "slide_from_bottom", 
         }}
       />
       <Stack.Screen name="All" component={AllScreen} />
