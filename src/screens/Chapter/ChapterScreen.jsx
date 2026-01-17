@@ -35,7 +35,6 @@ const ChapterListModal = memo(
       >
         <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.7)" }}>
           <Pressable style={{ flex: 1 }} onPress={onClose} />
-
           <View
             style={{
               height: "85%",
@@ -60,7 +59,6 @@ const ChapterListModal = memo(
                 <Ionicons name="close" size={24} color="white" />
               </TouchableOpacity>
             </View>
-
             <View style={{ flex: 1 }}>
               <ChapterListSection
                 item={chapterList}
@@ -75,6 +73,7 @@ const ChapterListModal = memo(
                 search={chapterList.search}
                 setSearch={chapterList.setSearch}
                 loading={chapterList.loading}
+                isSheet={true}
               />
             </View>
           </View>
@@ -85,11 +84,12 @@ const ChapterListModal = memo(
 );
 
 const MangaImageItem = memo(({ uri, index }) => {
-  const [aspectRatio, setAspectRatio] = useState(0.7);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState(0.72); 
+  const [loading, setLoading] = useState(true);
+
   return (
-    <View style={[styles.imageContainer, { minHeight: windowWidth / 0.7 }]}>
-      {!isLoaded && (
+    <View style={[styles.imageContainer, { height: windowWidth / aspectRatio }]}>
+      {loading && (
         <View style={styles.imagePlaceholder}>
           <ActivityIndicator size="small" color="#EF4444" />
           <Text style={styles.loadingText}>PAGE {index + 1}</Text>
@@ -99,16 +99,17 @@ const MangaImageItem = memo(({ uri, index }) => {
         source={uri}
         style={{
           width: windowWidth,
-          height: windowWidth / aspectRatio,
-          opacity: isLoaded ? 1 : 0,
+          height: "100%",
         }}
-        contentFit="contain"
-        cachePolicy="disk"
-        transition={400}
+        contentFit="fill"
+        cachePolicy="memory-disk"
+        transition={200}
         onLoad={(event) => {
           const { width, height } = event.source;
-          if (width && height) setAspectRatio(width / height);
-          setIsLoaded(true);
+          if (width && height) {
+             setAspectRatio(width / height);
+          }
+          setLoading(false);
         }}
       />
     </View>
@@ -116,18 +117,18 @@ const MangaImageItem = memo(({ uri, index }) => {
 });
 
 export default function ReadScreen({ navigation, route }) {
-  const [currentChapterId, setCurrentChapterId] = useState(
-    route.params?.chapterId
-  );
+  const [currentChapterId, setCurrentChapterId] = useState(route.params?.chapterId);
   const [showChapterListModal, setShowChapterListModal] = useState(false);
+  
   const insets = useSafeAreaInsets();
   const flatListRef = useRef(null);
 
-  const { chapterDetail, loading: apiLoading } =
-    useChapterDetail(currentChapterId);
+  const { chapterDetail, loading: apiLoading } = useChapterDetail(currentChapterId);
   const { manhwaDetail } = useManhwaDetail(chapterDetail?.manga_id);
   const [showControls, setShowControls] = useState(true);
   const chapterList = useChapterList(chapterDetail?.manga_id);
+
+  const imagesData = chapterDetail?.chapter?.data || [];
 
   useEffect(() => {
     if (chapterDetail && manhwaDetail) {
@@ -138,41 +139,39 @@ export default function ReadScreen({ navigation, route }) {
     }
   }, [chapterDetail, manhwaDetail]);
 
-  const toggleControls = useCallback(
-    () => setShowControls((prev) => !prev),
-    []
-  );
-
-  const scrollToTop = () => {
-    setTimeout(() => {
-      if (flatListRef.current) {
-        flatListRef.current.scrollToOffset({ offset: 0, animated: false });
-      }
-    }, 100);
-  };
+  const toggleControls = useCallback(() => setShowControls((prev) => !prev), []);
 
   const handleChapterChange = (newId) => {
     if (newId) {
       setCurrentChapterId(newId);
       setShowControls(true);
-      scrollToTop();
+      if (flatListRef.current) {
+        flatListRef.current.scrollToOffset({ offset: 0, animated: false });
+      }
     }
   };
 
-  if (apiLoading && !chapterDetail)
+  if (apiLoading || !chapterDetail) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#EF4444" />
+        <StatusBar hidden={false} translucent backgroundColor="transparent" barStyle="light-content" />
+        <Animatable.View animation="pulse" iterationCount="infinite">
+          <ActivityIndicator size="large" color="#EF4444" />
+        </Animatable.View>
+        <Text style={[styles.loadingText, { marginTop: 20, color: '#fff' }]}>
+          {apiLoading ? "MEMUAT CHAPTER" : "TUNGGU SEBENTAR..."}
+        </Text>
       </View>
     );
+  }
 
   return (
     <View style={styles.mainContainer}>
       <StatusBar hidden={!showControls} translucent />
-
+      
       <FlatList
         ref={flatListRef}
-        data={chapterDetail?.chapter?.data || []}
+        data={imagesData}
         keyExtractor={(item, index) => `${currentChapterId}-${index}`}
         renderItem={({ item, index }) => (
           <Pressable onPress={toggleControls}>
@@ -182,12 +181,12 @@ export default function ReadScreen({ navigation, route }) {
             />
           </Pressable>
         )}
-        removeClippedSubviews={false}
+        removeClippedSubviews={true}
         initialNumToRender={3}
         maxToRenderPerBatch={5}
         windowSize={5}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingBottom: 120, backgroundColor: '#000' }}
         onScrollBeginDrag={() => showControls && setShowControls(false)}
       />
 
@@ -202,8 +201,9 @@ export default function ReadScreen({ navigation, route }) {
       {showControls && (
         <Animatable.View
           animation="fadeInDown"
-          duration={250}
+          duration={200}
           style={[styles.header, { paddingTop: insets.top + 10 }]}
+          useNativeDriver
         >
           <View style={styles.headerContent}>
             <TouchableOpacity
@@ -227,8 +227,9 @@ export default function ReadScreen({ navigation, route }) {
       {showControls && (
         <Animatable.View
           animation="fadeInUp"
-          duration={250}
+          duration={200}
           style={[styles.bottomBar, { bottom: insets.bottom + 20 }]}
+          useNativeDriver
         >
           <TouchableOpacity
             onPress={() => handleChapterChange(chapterDetail.prev_chapter_id)}
@@ -240,7 +241,6 @@ export default function ReadScreen({ navigation, route }) {
           >
             <Ionicons name="chevron-back" size={22} color="white" />
           </TouchableOpacity>
-
           <View style={styles.centerInfo}>
             <TouchableOpacity onPress={() => setShowChapterListModal(true)}>
               <Text
@@ -252,7 +252,6 @@ export default function ReadScreen({ navigation, route }) {
             </TouchableOpacity>
             <Text style={styles.subInfoText}>TAP FOR LIST</Text>
           </View>
-
           <TouchableOpacity
             onPress={() => handleChapterChange(chapterDetail.next_chapter_id)}
             disabled={!chapterDetail?.next_chapter_id || apiLoading}
@@ -273,21 +272,26 @@ const styles = StyleSheet.create({
   mainContainer: { flex: 1, backgroundColor: "#000" },
   centerContainer: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#0F0F12",
     justifyContent: "center",
     alignItems: "center",
   },
-  imageContainer: { width: windowWidth, backgroundColor: "#000" },
+  imageContainer: { 
+    width: windowWidth, 
+    backgroundColor: "#000",
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden'
+  },
   imagePlaceholder: {
-    position: "absolute",
-    inset: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#0F0F12",
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#0F0F12',
+    justifyContent: 'center',
+    alignItems: 'center',
     zIndex: 1,
   },
   loadingText: {
-    color: "#333",
+    color: "#555",
     fontSize: 10,
     marginTop: 8,
     fontWeight: "900",
@@ -298,7 +302,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: "rgba(10, 10, 12, 0.96)",
+    backgroundColor: "rgba(10, 10, 12, 0.95)",
     paddingBottom: 15,
     zIndex: 100,
   },
@@ -315,7 +319,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 20,
     right: 20,
-    backgroundColor: "rgba(15, 15, 18, 0.96)",
+    backgroundColor: "rgba(15, 15, 18, 0.95)",
     padding: 12,
     borderRadius: 30,
     flexDirection: "row",
