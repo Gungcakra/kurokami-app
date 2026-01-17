@@ -41,7 +41,8 @@ export const ChapterListSection = ({
     : item?.data || item?.chapters || [];
 
   const mangaId = dataArray[0]?.manga_id;
-  const manhwaTitle = useManhwaDetail(mangaId)?.manhwaDetail?.title;
+  const manhwaDetailHook = useManhwaDetail(mangaId);
+  const manhwaTitle = manhwaDetailHook?.manhwaDetail?.title;
 
   const loadReadChapters = async () => {
     try {
@@ -50,7 +51,7 @@ export const ChapterListSection = ({
         setReadChapters(JSON.parse(savedRead));
       }
     } catch (e) {
-      console.error("Gagal memuat riwayat baca", e);
+      console.error(e);
     }
   };
 
@@ -73,6 +74,7 @@ export const ChapterListSection = ({
       }
     } catch (e) {
       console.error(e);
+    } finally {
       setLoadingChapterId(null);
     }
   };
@@ -184,6 +186,10 @@ export const ChapterListSection = ({
                       <Image
                         source={{ uri: chapter.thumbnail_image_url }}
                         className="w-20 h-14 rounded-2xl bg-zinc-soft"
+                        resizeMethod="resize"
+                        resizeMode="cover"
+                        cachePolicy="memory-disk"
+                        progressiveRenderingEnabled={false}
                       />
                       {isNew && (
                         <View className="absolute -top-1 -left-1 bg-red-600 px-2 py-0.5 rounded-lg border-2 border-[#0F0F12]">
@@ -218,7 +224,12 @@ export const ChapterListSection = ({
                       className={`p-2 rounded-xl ${
                         isNew ? "bg-red-500/10" : "bg-zinc-soft"
                       }`}
-                      style={{ width: 36, height: 36, alignItems: 'center', justifyContent: 'center' }}
+                      style={{
+                        width: 36,
+                        height: 36,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
                     >
                       {isLoadingItem ? (
                         <ActivityIndicator size="small" color="#EF4444" />
