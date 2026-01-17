@@ -77,6 +77,34 @@ export default function HistoryScreen() {
 
   return (
     <View className="flex-1 bg-[#0F0F12]">
+      <View style={{ paddingTop: insets.top + 50 }} className="px-8 mb-10">
+        <Animatable.View animation="fadeIn" duration={1000}>
+          <View className="flex-row items-center mb-4">
+            <View className="h-[2px] w-8 bg-red-600 mr-3" />
+            <Text className="text-red-600 text-[12px] font-black tracking-[3px] uppercase">
+              HISTORY LOG
+            </Text>
+          </View>
+          <View className="flex-row justify-between items-end">
+            <Text className="text-white text-5xl font-black tracking-tighter leading-[48px]">
+              Riwayat{"\n"}
+              <Text className="text-zinc-700">Baca.</Text>
+            </Text>
+            {historyData.length > 0 && (
+              <TouchableOpacity
+                onPress={() => {
+                  setItemToDelete(null);
+                  setShowConfirmAlert(true);
+                }}
+                className="mb-2 bg-zinc-900 p-2 rounded-xl border border-white/5"
+              >
+                <Ionicons name="trash" size={20} color="#EF4444" />
+              </TouchableOpacity>
+            )}
+          </View>
+        </Animatable.View>
+      </View>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}
@@ -88,34 +116,6 @@ export default function HistoryScreen() {
           />
         }
       >
-        <View style={{ paddingTop: insets.top + 50 }} className="px-8 mb-10">
-          <Animatable.View animation="fadeIn" duration={1000}>
-            <View className="flex-row items-center mb-4">
-              <View className="h-[2px] w-8 bg-red-600 mr-3" />
-              <Text className="text-red-600 text-[12px] font-black tracking-[3px] uppercase">
-                HISTORY LOG
-              </Text>
-            </View>
-            <View className="flex-row justify-between items-end">
-              <Text className="text-white text-5xl font-black tracking-tighter leading-[48px]">
-                Riwayat{"\n"}
-                <Text className="text-zinc-700">Baca.</Text>
-              </Text>
-              {historyData.length > 0 && (
-                <TouchableOpacity
-                  onPress={() => {
-                    setItemToDelete(null);
-                    setShowConfirmAlert(true);
-                  }}
-                  className="mb-2 bg-zinc-900 p-2 rounded-xl border border-white/5"
-                >
-                  <Ionicons name="trash" size={20} color="#EF4444" />
-                </TouchableOpacity>
-              )}
-            </View>
-          </Animatable.View>
-        </View>
-
         <View className="px-6">
           {historyData.length > 0
             ? historyData.map((item, index) => (

@@ -186,14 +186,20 @@ export const DetailSection = ({ item, insets, navigation }) => {
         {/* GENRES */}
         <View className="flex-row flex-wrap justify-center mb-8">
           {item?.taxonomy?.Genre?.map((genre) => (
-            <View
+            <TouchableOpacity
               key={genre.taxonomy_id}
+              onPress={() => {
+                navigation.navigate("Main", {
+                  screen: "Explore",
+                  params: { genre: genre.name },
+                });
+              }}
               className="bg-red-500/10 px-4 py-1.5 rounded-xl m-1 border border-red-500/20"
             >
               <Text className="text-white text-[11px] font-bold uppercase">
                 {genre.name}
               </Text>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
 

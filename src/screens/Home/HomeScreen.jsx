@@ -27,7 +27,7 @@ const HomeScreen = ({ navigation }) => {
         <PopularSection navigation={navigation} />
         <RecommendationSection navigation={navigation} />
         <NewUpdateSection navigation={navigation} />
-        <GenreSection />
+        <GenreSection navigation={navigation} />
         <TopSection navigation={navigation} />
         <CompleteSection navigation={navigation} />
       </ScrollView>

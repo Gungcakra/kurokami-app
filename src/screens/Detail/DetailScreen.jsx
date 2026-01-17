@@ -180,7 +180,7 @@ export default function DetailScreen({ route }) {
   };
 
   return (
-    <View className="flex-1 bg-zinc-bg">
+    <View className="flex-1 bg-[#0F0F12]">
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 140 }}
