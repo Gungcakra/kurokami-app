@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import {
   View,
   Text,
   TouchableOpacity,
-  BackHandler,
   Modal,
 } from "react-native";
 
@@ -34,6 +33,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Alert from "../../components/Alert";
+import { goBackOrHome, useBackHandler } from "../../hooks/navigation";
 export default function DetailScreen({ route }) {
   const { id } = route.params;
 
@@ -45,21 +45,12 @@ export default function DetailScreen({ route }) {
 
   const chapterData = useChapterList(id);
 
-  useEffect(() => {
-    const backAction = () => {
-      navigation.navigate("Main");
-
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-
-      backAction
-    );
-
-    return () => backHandler.remove();
+  const handleBack = useCallback(() => {
+    goBackOrHome(navigation);
+    return true;
   }, [navigation]);
+
+  useBackHandler(handleBack);
 
   const handlePress = (type) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -187,6 +178,7 @@ export default function DetailScreen({ route }) {
             item={manhwaDetail}
             navigation={navigation}
             insets={insets}
+            onBack={handleBack}
           />
         )}
 

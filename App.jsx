@@ -6,6 +6,8 @@ import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler'; // IMPORT INI
 import AppNavigator from './src/navigation/AppNavigator';
+import { DownloadProvider } from './src/context/DownloadContext';
+import { useAppUpdates } from './src/hooks/useAppUpdates';
 import * as SystemUI from "expo-system-ui";
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -21,6 +23,8 @@ const styles = {
 };
 
 const App = () => {
+  useAppUpdates();
+
   useEffect(() => {
     SystemUI.setBackgroundColorAsync("#1A1A1F");
   }, []);
@@ -34,9 +38,11 @@ const App = () => {
           backgroundColor="#1A1A1F" 
         />
         
-        <NavigationContainer theme={styles}>
-          <AppNavigator />
-        </NavigationContainer>
+        <DownloadProvider>
+          <NavigationContainer theme={styles}>
+            <AppNavigator />
+          </NavigationContainer>
+        </DownloadProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

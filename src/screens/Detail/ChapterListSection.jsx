@@ -13,6 +13,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { saveToStorage } from "../../utils/storageHelper";
 import { useManhwaDetail } from "../../hooks/detail";
+import ChapterDownloadButton from "../../components/ChapterDownloadButton";
+import Alert from "../../components/Alert";
 
 export const ChapterListSection = ({
   item,
@@ -31,6 +33,12 @@ export const ChapterListSection = ({
 }) => {
   const [readChapters, setReadChapters] = useState([]);
   const [loadingChapterId, setLoadingChapterId] = useState(null);
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    title: "",
+    message: "",
+    type: "",
+  });
 
   useEffect(() => {
     loadReadChapters();
@@ -138,10 +146,10 @@ export const ChapterListSection = ({
             placeholderTextColor="#52525B"
             className="flex-1 ml-3 text-white font-bold text-base"
             keyboardType="numeric"
-            value={search}
+            value={search ?? ""}
             onChangeText={(txt) => {
-              setSearch(txt);
-              setPage(1);
+              setSearch?.(txt);
+              setPage?.(1);
             }}
           />
         </View>
@@ -219,6 +227,14 @@ export const ChapterListSection = ({
                         )}
                       </View>
                     </View>
+
+                    <ChapterDownloadButton
+                      chapter={chapter}
+                      manhwaTitle={manhwaTitle}
+                      onNotify={(payload) =>
+                        setShowAlert({ show: true, ...payload })
+                      }
+                    />
 
                     <View
                       className={`p-2 rounded-xl ${
@@ -326,6 +342,8 @@ export const ChapterListSection = ({
           </TouchableOpacity>
         </View>
       </Animatable.View>
+
+      <Alert showAlert={showAlert} setShowAlert={setShowAlert} />
     </View>
   );
 };

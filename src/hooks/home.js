@@ -216,7 +216,7 @@ export const useSearchManhwa = () => {
       }
 
       // Cek apakah masih ada halaman selanjutnya
-      setHasMore(newData.length > 0);
+      setHasMore(result?.meta?.has_next ?? newData.length > 0);
       setPage(pageNumber);
     } catch (err) {
       setError("Gagal mencari manhwa");
@@ -269,29 +269,8 @@ export const useManhwaByType = (type) => {
     else setLoading(true);
 
     try {
-      let result;
-      const pageSize = 24; // Sesuaikan dengan kebutuhan
-
-      // Router API berdasarkan type
-      switch (type) {
-        case "new-update":
-          result = await apiService.getNewUpdate(pageNumber, pageSize, "all");
-          break;
-        case "recommendation":
-          result = await apiService.getRecommend(pageNumber, pageSize);
-          break;
-        case "popular":
-          result = await apiService.getPopular(pageNumber, pageSize);
-          break;
-        case "complete":
-          result = await apiService.getCompleted(pageNumber, pageSize);
-          break;
-        case "top":
-          result = await apiService.getTop(pageNumber, pageSize);
-          break;
-        default:
-          result = { data: [] };
-      }
+      const pageSize = 24;
+      const result = await apiService.getBrowse(type, pageNumber, pageSize);
 
       const newData = result?.data || [];
 
@@ -302,7 +281,7 @@ export const useManhwaByType = (type) => {
       }
 
       // Jika data yang datang kurang dari pageSize, berarti sudah habis
-      setHasMore(newData.length >= pageSize);
+      setHasMore(result?.meta?.has_next ?? newData.length >= pageSize);
       setPage(pageNumber);
     } catch (err) {
       setError("Gagal memuat data");
@@ -370,7 +349,7 @@ export const useExplore = () => {
 
       const newData = result?.data || [];
       setData((prev) => (isNextPage ? [...prev, ...newData] : newData));
-      setHasMore(newData.length >= filters.pageSize);
+      setHasMore(result?.meta?.has_next ?? newData.length >= filters.pageSize);
 
       if (newData.length > 0) {
         currentPage.current = pageToFetch;

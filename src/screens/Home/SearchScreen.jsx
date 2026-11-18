@@ -1,6 +1,7 @@
-import React, { useEffect, useCallback } from 'react';
-import { View, Text, TextInput, FlatList, ActivityIndicator, BackHandler, TouchableOpacity } from 'react-native';
+import React, { useCallback } from 'react';
+import { View, Text, TextInput, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useSearchManhwa } from '../../hooks/home';
+import { goBackOrHome, useBackHandler } from '../../hooks/navigation';
 import ManhwaCardSkeleton from '../../components/ManhwaCardSkeleton';
 import ManhwaCard from '../../components/ManhwaCard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -30,13 +31,12 @@ const SearchScreen = ({ navigation }) => {
         );
     }, [loadingMore]);
 
-    useEffect(() => {
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            navigation.goBack(); 
-            return true;
-        });
-        return () => backHandler.remove();
+    const handleBack = useCallback(() => {
+        goBackOrHome(navigation);
+        return true;
     }, [navigation]);
+
+    useBackHandler(handleBack);
 
     const skeletons = Array.from({ length: 12 }, (_, i) => ({ id: `sk-${i}` }));
 
@@ -45,8 +45,8 @@ const SearchScreen = ({ navigation }) => {
             {/* Header Search Section */}
             <View className="px-6 py-6">
                 <View className="flex-row items-center mb-6">
-                    <TouchableOpacity 
-                        onPress={() => navigation.goBack()}
+                    <TouchableOpacity
+                        onPress={handleBack}
                         className="mr-4 bg-zinc-900/80 p-2 rounded-xl border border-white/5"
                     >
                         <Ionicons name="chevron-back" size={20} color="white" />

@@ -17,10 +17,51 @@ import ExploreScreen from "../screens/Explore/ExploreScreen";
 import BookmarkScreen from "../screens/BookmarkScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import InfoScreen from "../screens/Info/InfoScreen";
+import DownloadScreen from "../screens/Download/DownloadScreen";
 
 const Tab = createMaterialTopTabNavigator();
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const TAB_COUNT = 5;
+
+const TABS = [
+  {
+    name: "Home",
+    icon: "home-outline",
+    label: "Home",
+    component: HomeScreen,
+  },
+  {
+    name: "Explore",
+    icon: "compass-outline",
+    label: "Explore",
+    component: ExploreScreen,
+  },
+  {
+    name: "Bookmark",
+    icon: "bookmark-outline",
+    label: "Library",
+    component: BookmarkScreen,
+  },
+  {
+    name: "Download",
+    icon: "download-outline",
+    label: "Unduhan",
+    component: DownloadScreen,
+  },
+  {
+    name: "History",
+    icon: "time-outline",
+    label: "History",
+    component: HistoryScreen,
+  },
+  {
+    name: "Info",
+    icon: "information-circle-outline",
+    label: "Info",
+    component: InfoScreen,
+  },
+];
+
+const TAB_COUNT = TABS.length;
 const SLIDER_WIDTH = SCREEN_WIDTH / TAB_COUNT;
 
 const TabButton = ({ index, activeIndexAnim, iconName, label }) => {
@@ -83,38 +124,7 @@ export default function TabNavigator() {
   const insets = useSafeAreaInsets();
   const positionAnim = useRef(new Animated.Value(0)).current;
 
-  const tabs = [
-    {
-      name: "Home",
-      icon: "home-outline",
-      label: "Home",
-      component: HomeScreen,
-    },
-    {
-      name: "Explore",
-      icon: "compass-outline",
-      label: "Explore",
-      component: ExploreScreen,
-    },
-    {
-      name: "Bookmark",
-      icon: "bookmark-outline",
-      label: "Library",
-      component: BookmarkScreen,
-    },
-    {
-      name: "History",
-      icon: "time-outline",
-      label: "History",
-      component: HistoryScreen,
-    },
-    {
-      name: "Info",
-      icon: "information-circle-outline",
-      label: "Info",
-      component: InfoScreen,
-    },
-  ];
+  const tabs = TABS;
 
   return (
     <View style={{ flex: 1, backgroundColor: "#0F0F12" }}>

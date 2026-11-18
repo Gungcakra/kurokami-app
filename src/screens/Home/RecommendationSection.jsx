@@ -34,7 +34,7 @@ const RecommendationSection = ({ navigation }) => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("All", { type: "recommendations" })}
+          onPress={() => navigation.navigate("All", { type: "recommendation" })}
           className="pb-1"
         >
           <Text className="text-primary-400 text-lg font-semibold">Semua</Text>

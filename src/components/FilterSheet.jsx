@@ -52,7 +52,12 @@ export const FilterSheet = ({ visible, onClose, filters, updateFilter, genres, s
   );
 
   return (
-    <Modal visible={visible} animationType="slide" transparent>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent
+      onRequestClose={onClose}
+    >
       <View className="flex-1 justify-end bg-black/60">
         <View className="bg-zinc-bg rounded-t-[40px] p-8 h-[85%] border-t border-white/10">
           

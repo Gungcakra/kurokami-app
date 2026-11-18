@@ -9,6 +9,18 @@
     "newArchEnabled": true,
     "backgroundColor": "#1A1A1F",
     "jsEngine": "hermes",
+    "updates": {
+      "url": "https://u.expo.dev/1c2d89cf-c913-462b-9243-df1c51ce5bbc",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0,
+      "requestHeaders": {
+        "expo-channel-name": "preview"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -19,9 +31,6 @@
     },
     "android": {
       "package": "com.kurokami.app",
-      "enableProguardInReleaseBuilds": true,
-      "enableShrinkResourcesInReleaseBuilds": true,
-      "useLegacyPackaging": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1A1A1F"
@@ -35,6 +44,24 @@
       "eas": {
         "projectId": "1c2d89cf-c913-462b-9243-df1c51ce5bbc"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "buildArchs": [
+              "arm64-v8a",
+              "armeabi-v7a"
+            ],
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "enablePngCrunchInReleaseBuilds": true,
+            "enableBundleCompression": true,
+            "useLegacyPackaging": true
+          }
+        }
+      ]
+    ]
   }
 }

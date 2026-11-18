@@ -1,9 +1,10 @@
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ManhwaCard from "../../components/ManhwaCard";
 import ManhwaCardSkeleton from "../../components/ManhwaCardSkeleton";
 import { useManhwaByType } from "../../hooks/home";
+import { goBackOrHome, useBackHandler } from "../../hooks/navigation";
 import * as Animatable from "react-native-animatable";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -25,9 +26,17 @@ const AllScreen = ({ navigation, route }) => {
   const type = route.params?.type || "all";
   const { data, loading, loadingMore, loadMore, refresh } = useManhwaByType(type);
 
+  const handleBack = useCallback(() => {
+    goBackOrHome(navigation);
+    return true;
+  }, [navigation]);
+
+  useBackHandler(handleBack);
+
   const titleMap = {
     "new-update": "Updates",
     "recommendation": "For You",
+    "recommendations": "For You",
     "popular": "Popular",
     "complete": "Finished",
     "top": "Top Tier",
@@ -41,8 +50,8 @@ const AllScreen = ({ navigation, route }) => {
       <View className="px-6 pt-14 pb-6">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center flex-1">
-            <TouchableOpacity 
-              onPress={() => navigation.goBack()}
+            <TouchableOpacity
+              onPress={handleBack}
               activeOpacity={0.7}
               className="bg-zinc-900/80 p-3 rounded-2xl border border-white/5 mr-4"
             >

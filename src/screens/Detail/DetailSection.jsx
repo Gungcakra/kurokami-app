@@ -15,7 +15,7 @@ import * as Haptics from "expo-haptics";
 
 const { width } = Dimensions.get("window");
 
-export const DetailSection = ({ item, insets, navigation }) => {
+export const DetailSection = ({ item, insets, navigation, onBack }) => {
   const coverImg = item?.cover_portrait_url || item?.cover_image_url;
   const manhwaDetail = item;
   const [showAlert, setShowAlert] = useState({
@@ -167,7 +167,7 @@ export const DetailSection = ({ item, insets, navigation }) => {
           className="absolute top-0 left-0 right-0 px-6 flex-row justify-between z-20"
         >
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            onPress={() => (onBack ? onBack() : navigation.goBack())}
             className="bg-black/40 p-3 rounded-full border border-white/10"
           >
             <Ionicons name="chevron-back" size={24} color="white" />

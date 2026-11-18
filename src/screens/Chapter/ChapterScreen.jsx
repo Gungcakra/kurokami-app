@@ -22,6 +22,7 @@ import { useChapterDetail } from "../../hooks/chapter";
 import { useChapterList, useManhwaDetail } from "../../hooks/detail";
 import { ChapterListSection } from "../Detail/ChapterListSection";
 import { saveToStorage } from "../../utils/storageHelper";
+import { goBackOrHome, useBackHandler } from "../../hooks/navigation";
 
 const { width: windowWidth } = Dimensions.get("window");
 const SETTINGS_KEY = "@reader_config_v3";
@@ -124,6 +125,22 @@ export default function ReadScreen({ navigation, route }) {
     return () => clearInterval(scrollInterval.current);
   }, [autoScrollSpeed]);
 
+  // Back fisik: tutup panel/modal yang terbuka dulu, baru keluar dari reader
+  const handleBack = useCallback(() => {
+    if (showChapterListModal) {
+      setShowChapterListModal(false);
+      return true;
+    }
+    if (showSettings) {
+      setShowSettings(false);
+      return true;
+    }
+    goBackOrHome(navigation);
+    return true;
+  }, [showChapterListModal, showSettings, navigation]);
+
+  useBackHandler(handleBack);
+
   const handleChapterChange = (newId) => {
     if (!newId) return;
     setCurrentChapterId(newId);
@@ -187,7 +204,7 @@ export default function ReadScreen({ navigation, route }) {
         >
           <View style={styles.flexRowCenterBetween}>
             <TouchableOpacity
-              onPress={() => navigation.goBack()}
+              onPress={handleBack}
               style={styles.roundIconBtn}
             >
               <Ionicons name="arrow-back" size={22} color="white" />
@@ -516,6 +533,7 @@ const ChapterListModal = memo(
         animationType="slide"
         transparent
         statusBarTranslucent
+        onRequestClose={onClose}
       >
         <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.85)" }}>
           <Pressable style={{ flex: 1 }} onPress={onClose} />
@@ -565,6 +583,8 @@ const ChapterListModal = memo(
               page={chapterList.page}
               setPage={chapterList.setPage}
               totalPage={chapterList.totalPage}
+              search={chapterList.search}
+              setSearch={chapterList.setSearch}
               loading={chapterList.loading}
             />
           </Animatable.View>

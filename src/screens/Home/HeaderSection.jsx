@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HeaderSection = ({ navigation }) => {
